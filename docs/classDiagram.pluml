@@ -1,0 +1,87 @@
+@startuml Data Generator
+skinparam classAttributeIconSize 0
+
+class Server{
++ run(): void
+- constructRequest(): void
+- processRequest(): void
+- handleRequest(): void
+- defineRoutes(): void
+}
+
+class RequestProcessor{
+    - formatter: formatter
+    - externalAPI: ExternalAPI
+    + initialize(): RequestProcessor
+    + Process(): String
+}
+
+interface ExternalAPI{
+    - dataStructure: Map
+    - token: String
+    - apiKey: String
+    - url: String
+    + initialize(): ExternalAPI
+    + getDataStructure(): Map
+    + getStationboard(station: String, date: DateTime): String
+    + getConnections(from: String, to: String, date: DateTime): String
+    + getStations(query: String): String
+    - authenticate(): void
+}
+
+class SearchCH{
+    + getStationboard(station: String, date: DateTime): String
+    + getConnections(from: String, to: String, date: DateTime): String
+}
+
+interface formatter{
+    - DestinationDataStructure: Map
+    - originDataStructure: Map
+    + initialize(originDataStructure: Map = {}): formatter
+    + format(data: Map): String
+}
+
+class DataStructureUtilities{
+    + {static} remapJSON(data: String, originStructure: Map, DestinationStructure: Map): String
+}
+
+class DeutschebahnCOM {
+}
+
+class SheneoIO {
+}
+
+class SncfCOM{
+}
+
+class JSONformatter{
+}
+
+class PDFformatter{
+}
+
+class Dotenv{
+}
+
+RequestProcessor -right-> formatter
+formatter <|.. JSONformatter
+formatter <|.. PDFformatter
+
+formatter -right->DataStructureUtilities
+
+
+SearchCH .up.|> ExternalAPI
+DeutschebahnCOM .up.|> ExternalAPI
+SheneoIO .up.|> ExternalAPI
+SncfCOM .up.|> ExternalAPI
+
+Server -up-> RequestProcessor
+RequestProcessor -left-> ExternalAPI
+
+'Dotenv file not a class
+ExternalAPI -left-> Dotenv
+
+'Main will be just a file, maybe called index, doesn't really matter
+main -up-> Server
+
+@enduml
