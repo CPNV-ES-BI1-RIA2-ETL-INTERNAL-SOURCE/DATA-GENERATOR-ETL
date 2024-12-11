@@ -1,6 +1,4 @@
 class SearchCH
-  include ExternalAPI
-
   def get_stationboard(station, date)
     raise NotImplementedError, 'Method not implemented'
   end
