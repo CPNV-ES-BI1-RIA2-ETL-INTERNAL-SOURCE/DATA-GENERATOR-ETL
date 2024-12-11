@@ -6,7 +6,6 @@ class Server{
 - constructRequest(): void
 - processRequest(): void
 - handleRequest(): void
-- defineRoutes(): void
 }
 
 class RequestProcessor{
