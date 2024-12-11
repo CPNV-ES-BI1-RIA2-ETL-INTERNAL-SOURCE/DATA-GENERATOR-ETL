@@ -4,11 +4,13 @@ source 'https://rubygems.org'
 ruby '~> 3.0'
 
 # Core dependencies
-gem 'httparty', '~> 0.20'
-gem 'sinatra', '~> 4.0'
+gem 'httparty'
+gem 'sinatra'
+gem 'rackup'
+gem 'puma'
 
 # Testing
-gem 'rspec', '~> 3.12'
+gem 'rspec'
 
 # Development tools
-gem 'dotenv', '~> 2.8'
+gem 'dotenv'

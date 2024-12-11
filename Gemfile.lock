@@ -16,6 +16,9 @@ GEM
       bigdecimal (~> 3.1)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.7.4)
+    puma (6.5.0)
+      nio4r (~> 2.0)
     rack (3.1.8)
     rack-protection (4.1.1)
       base64 (>= 0.1.0)
@@ -23,6 +26,8 @@ GEM
       rack (>= 3.0.0, < 4)
     rack-session (2.0.0)
       rack (>= 3.0.0)
+    rackup (2.2.1)
+      rack (>= 3)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -50,10 +55,12 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
-  dotenv (~> 2.8)
-  httparty (~> 0.20)
-  rspec (~> 3.12)
-  sinatra (~> 4.0)
+  dotenv
+  httparty
+  puma
+  rackup
+  rspec
+  sinatra
 
 RUBY VERSION
    ruby 3.3.3p89
