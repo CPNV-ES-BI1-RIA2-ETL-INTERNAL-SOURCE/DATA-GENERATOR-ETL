@@ -48,3 +48,17 @@ A Data Fetcher / Data Generator for a Bussiness Inteligence project.
 // TODO Depending on the changes to the conception
 ## Source API
 Search.ch : https://search.ch/timetable/api/help
+## Testing
+RSpec
+
+```Ruby
+RSpec.describe "An example" do
+  it "adds two numbers" do
+    expect(1 + 1).to eq(2)
+  end
+
+  it "raises an error when dividing by zero" do
+    expect { 1 / 0 }.to raise_error(ZeroDivisionError)
+  end
+end
+```
