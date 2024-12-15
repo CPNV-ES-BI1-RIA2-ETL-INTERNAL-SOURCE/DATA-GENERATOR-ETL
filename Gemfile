@@ -11,6 +11,7 @@ gem 'puma'
 
 # Testing
 gem 'rspec'
+gem 'rack-test'
 
 # Development tools
 gem 'dotenv'
