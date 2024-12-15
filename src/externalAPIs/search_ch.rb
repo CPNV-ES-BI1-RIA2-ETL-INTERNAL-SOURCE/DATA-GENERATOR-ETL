@@ -1,5 +1,6 @@
 require_relative 'external_api'
 require_relative 'models/stationboard_response'
+require 'json'
 
 class SearchAPI < ExternalAPI
   base_uri 'search.ch'
