@@ -15,12 +15,12 @@ class RequestProcessor{
     + Process(): String
 }
 
-interface ExternalAPI{
+class ExternalAPI{
     - dataStructure: Map
     - token: String
     - apiKey: String
     - url: String
-    + initialize(): ExternalAPI
+    + initialize(options: Map): ExternalAPI
     + getDataStructure(): Map
     + getStationboard(station: String, date: DateTime): String
     + getConnections(from: String, to: String, date: DateTime): String
@@ -29,8 +29,8 @@ interface ExternalAPI{
 }
 
 class SearchCH{
-    + getStationboard(station: String, date: DateTime): String
-    + getConnections(from: String, to: String, date: DateTime): String
+    + getStationboard(options: Map)): String
+    + getConnections(option: Map): String
 }
 
 interface formatter{
