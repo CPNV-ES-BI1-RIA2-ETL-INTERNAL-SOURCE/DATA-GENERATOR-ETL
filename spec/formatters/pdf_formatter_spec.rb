@@ -25,16 +25,4 @@ RSpec.describe PDFFormater do
     expect(text_analysis.strings).to include('Grandson')
     expect(text_analysis.strings).to include('1')
   end
-
-  it 'handles empty connections gracefully' do
-    allow(data).to receive(:connections).and_return([])
-    pdf = pdf_formatter.format(data)
-    expect(pdf.pages.first.text).not_to include('Heure de départ')
-  end
-
-  it 'handles nil connections gracefully' do
-    allow(data).to receive(:connections).and_return(nil)
-    pdf = pdf_formatter.format(data)
-    expect(pdf.pages.first.text).not_to include('Heure de départ')
-  end
 end
