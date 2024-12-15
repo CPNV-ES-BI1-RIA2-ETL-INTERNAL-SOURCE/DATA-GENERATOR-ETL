@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rspec'
 require 'httparty'
 require_relative '../../src/externalAPIs/search_ch'
