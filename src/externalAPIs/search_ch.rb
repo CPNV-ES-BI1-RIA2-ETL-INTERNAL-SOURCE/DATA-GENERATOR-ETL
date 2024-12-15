@@ -11,7 +11,8 @@ class SearchAPI < ExternalAPI
 
   def get_stationboard(options)
     @options[:query].merge! options
-    StationBoardResponse.new JSON.parse(self.class.get('/timetable/api/stationboard.json', @options).body, symbolize_names: true)
+    response = self.class.get('/timetable/api/stationboard.json', @options)
+    {:response => response, :formatted_response => StationBoardResponse.new(JSON.parse(response.body, symbolize_names: true))}
   end
 
   def get_connections(from, to, date)
