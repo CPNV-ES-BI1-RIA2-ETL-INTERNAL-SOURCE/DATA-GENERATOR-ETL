@@ -76,6 +76,14 @@ class Timetable {
 class Dotenv{
 }
 
+'Singleton
+class Config{
+    'available regions will have one or more API classes associated with it
+    + regionAPI: Map
+    + instance(): Config
+    + load(): void
+}
+
 RequestProcessor -right-> formatter
 formatter <|.. JSONformatter
 formatter <|.. PDFformatter
@@ -98,5 +106,6 @@ ExternalAPI -left-> Dotenv
 
 'Main will be just a file, maybe called index, doesn't really matter
 main -up-> Server
+main -right-> Config
 
 @enduml

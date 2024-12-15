@@ -16,6 +16,7 @@ gem 'ostruct'
 
 # Testing
 gem 'rspec'
+gem 'rack-test'
 
 group :test do
   gem 'pdf-inspector', require: "pdf/inspector"
