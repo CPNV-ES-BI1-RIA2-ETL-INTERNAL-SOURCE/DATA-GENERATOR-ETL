@@ -8,6 +8,9 @@ gem 'httparty'
 gem 'sinatra'
 gem 'rackup'
 gem 'puma'
+gem 'dry-struct'
+gem 'dry-validation'
+gem 'ostruct'
 
 # Testing
 gem 'rspec'
