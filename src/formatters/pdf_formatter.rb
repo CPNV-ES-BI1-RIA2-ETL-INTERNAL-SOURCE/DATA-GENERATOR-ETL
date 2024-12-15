@@ -1,7 +1,7 @@
 require_relative 'templates/timetable'
 require_relative '../helpers/date'
 
-class PDFFormater
+class PDFFormatter
   attr_accessor :destination_data_structure, :origin_data_structure
 
   def initialize(origin_data_structure = {})
