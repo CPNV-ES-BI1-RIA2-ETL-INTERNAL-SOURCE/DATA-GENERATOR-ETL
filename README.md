@@ -45,7 +45,46 @@ A Data Fetcher / Data Generator for a Bussiness Inteligence project.
 }
 ```
 #### PDF
-// TODO Depending on the changes to the conception
+
+The PDF will be generated with the data from the Search.ch API.
+
+Using the Prawn Library, the PDF will be generated with the following structure:
+
+- Header
+  - Station name (Gare de `{{station}}`)
+  - Date (État au `{{date}}`)
+  - Logo (SBB)
+- Body
+  - Table
+    - Columns
+      - Time
+      - Line
+      - Destination
+      - Vias
+      - Platform
+
+Example: [Timetable for Yverdon-les-Bains](docs/examples/yverdon-les-bains_24-12-12.pdf)
+
+Usage Example:
+```Ruby
+api = SearchAPI.new
+response = api.get_stationboard({:stop => "Yverdon-les-Bains", :date => "12/12/2024"})
+
+pdf = PDFFormater.new
+pdf.format(response[:formatted_response])
+```
+
+Return:
+```
+%PDF-1.4
+%\xFF\xFF\xFF\xFF
+1 0 obj
+<< /Creator <feff0050007200610077006e>
+/Producer <feff0050007200610077006e>
+...
+```
+
+
 ## Source API
 Search.ch : https://search.ch/timetable/api/help
 ## Testing

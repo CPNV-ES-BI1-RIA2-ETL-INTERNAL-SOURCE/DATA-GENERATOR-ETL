@@ -8,9 +8,17 @@ gem 'httparty'
 gem 'sinatra'
 gem 'rackup'
 gem 'puma'
+gem 'prawn'
+gem 'prawn-table'
+gem 'dry-struct'
+gem 'dry-validation'
+gem 'ostruct'
 
 # Testing
 gem 'rspec'
 
+group :test do
+  gem 'pdf-inspector', require: "pdf/inspector"
+end
 # Development tools
 gem 'dotenv'

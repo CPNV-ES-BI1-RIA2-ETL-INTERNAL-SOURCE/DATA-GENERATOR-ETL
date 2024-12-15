@@ -15,12 +15,12 @@ class RequestProcessor{
     + Process(): String
 }
 
-interface ExternalAPI{
+class ExternalAPI{
     - dataStructure: Map
     - token: String
     - apiKey: String
     - url: String
-    + initialize(): ExternalAPI
+    + initialize(options: Map): ExternalAPI
     + getDataStructure(): Map
     + getStationboard(station: String, date: DateTime): String
     + getConnections(from: String, to: String, date: DateTime): String
@@ -29,8 +29,8 @@ interface ExternalAPI{
 }
 
 class SearchCH{
-    + getStationboard(station: String, date: DateTime): String
-    + getConnections(from: String, to: String, date: DateTime): String
+    + getStationboard(options: Map)): String
+    + getConnections(option: Map): String
 }
 
 interface formatter{
@@ -57,7 +57,21 @@ class JSONformatter{
 }
 
 class PDFformatter{
+    + format(data: Map): String
 }
+
+class Timetable {
+  - table_data: Array
+  + initialize(): void
+  + document(): Prawn::Document
+  + draw_logo(path: String): void
+  + headers=(headers: Array): void
+  + draw_table(options: Map): void
+  + draw_heading(date: DateTime): void
+  + save(filename: String): void
+  + stop=(stop: Map): void
+}
+
 
 class Dotenv{
 }
@@ -67,6 +81,8 @@ formatter <|.. JSONformatter
 formatter <|.. PDFformatter
 
 formatter -right->DataStructureUtilities
+
+PDFformatter -left-> Timetable
 
 
 SearchCH .up.|> ExternalAPI
