@@ -1,0 +1,152 @@
+openapi: 3.0.2
+info:
+  title: Train Connections API
+  description: API fournissant des informations sur les horaires et connexions de train.
+  version: 1.0.0
+servers:
+  - url: https://search.ch/timetable/api
+    description: Serveur principal de l'API.
+paths:
+  /stationboard.json:
+    get:
+      summary: Récupère les départs pour un arrêt donné.
+      parameters:
+        - name: stop
+          in: query
+          required: true
+          description: "Nom ou id de l'arrêt (station) pour lequel récupérer les informations. (exemple: Yverdon-les-Bains ou <code>8504200</code>)"
+          schema:
+            type: string
+          example: 8504200
+        - name: date
+          in: query
+          required: false
+          description: Date pour laquelle les informations sont demandées (format MM/DD/YYYY).
+          schema:
+            type: string
+            format: "MM/DD/YYY"
+        - name: time
+          in: query
+          required: false
+          description: Heure pour laquelle les informations sont demandées (format HH:mm).
+          schema:
+            type: string
+        - name: show_tracks
+          in: query
+          required: false
+          description: Indique si les informations sur les voies doivent être incluses (1 pour oui, 0 pour non).
+          schema:
+            type: integer
+            enum: [ 0, 1 ]
+        - name: show_subsequent_stops
+          in: query
+          required: false
+          description: Indique si les arrêts suivants doivent être inclus (1 pour oui, 0 pour non).
+          schema:
+            type: integer
+            enum: [ 0, 1 ]
+      responses:
+        '200':
+          description: Réponse réussie.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stop:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Identifiant unique de l'arrêt.
+                      name:
+                        type: string
+                        description: Nom de l'arrêt.
+                      type:
+                        type: string
+                        description: Type d'arrêt (par exemple, train, strain).
+                      x:
+                        type: string
+                        description: Coordonnée X de l'arrêt.
+                      y:
+                        type: string
+                        description: Coordonnée Y de l'arrêt.
+                      lon:
+                        type: number
+                        format: double
+                        description: Longitude de l'arrêt.
+                      lat:
+                        type: number
+                        format: double
+                        description: Latitude de l'arrêt.
+                  connections:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        time:
+                          type: string
+                          format: date-time
+                          description: Heure de départ de la connexion.
+                        type:
+                          type: string
+                          description: Type de train (par exemple, train, express_train).
+                        line:
+                          type: string
+                          description: Ligne de train.
+                        operator:
+                          type: string
+                          description: Opérateur de la ligne.
+                        color:
+                          type: string
+                          description: Couleur associée à la ligne.
+                        type_name:
+                          type: string
+                          description: Nom du type de transport.
+                        track:
+                          type: string
+                          description: Voie de départ.
+                        terminal:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                              description: Identifiant unique de la gare terminale.
+                            name:
+                              type: string
+                              description: Nom de la gare terminale.
+                            lon:
+                              type: number
+                              format: double
+                              description: Longitude de la gare terminale.
+                            lat:
+                              type: number
+                              format: double
+                              description: Latitude de la gare terminale.
+                        subsequent_stops:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: Identifiant unique de l'arrêt suivant.
+                              name:
+                                type: string
+                                description: Nom de l'arrêt suivant.
+                              lon:
+                                type: number
+                                format: double
+                                description: Longitude de l'arrêt suivant.
+                              lat:
+                                type: number
+                                format: double
+                                description: Latitude de l'arrêt suivant.
+                              arr:
+                                type: string
+                                format: date-time
+                                description: Heure d'arrivée prévue.
+                              dep:
+                                type: string
+                                format: date-time
+                                description: Heure de départ prévue.
