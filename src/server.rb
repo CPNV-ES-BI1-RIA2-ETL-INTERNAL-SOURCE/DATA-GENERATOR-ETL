@@ -1,23 +1,72 @@
-class Server
-  def run
-    raise NotImplementedError, 'Method not implemented'
+# frozen_string_literal: true
+
+require 'sinatra/base'
+require 'puma'
+require 'date'
+require_relative './services/request_processor'
+require_relative './config'
+
+# Server class that handles the API requests
+class Server < Sinatra::Base
+  get '/api/stationboard/:region/:station' do
+    mimetype = request.env['HTTP_ACCEPT']
+    station = params['station']
+    date = params['date'] || Date.today.to_s
+    region = params['region']
+
+    external_api_method = "#{request.env['REQUEST_METHOD'].downcase}_stationboard"
+
+    request_processor = construct_request_processor(mimetype: mimetype, country: region, method: external_api_method)
+
+    data = request_processor.process({ station: station, date: date }, external_api_method)
+
+    status 200
+    content_type mimetype
+    body data
+  end
+
+  not_found do
+    status 404
+    body 'Not found'
+  end
+
+  def self.start_server!(port: 8080)
+    set :port, port
+
+    run!
   end
 
   private
 
-  def construct_request
-    raise NotImplementedError, 'Method not implemented'
+  def construct_request_processor(country:, method:, mimetype: 'application/json')
+    formatter_class = Config.instance.formatters[mimetype]
+
+    halt 415, "Unsupported Media Type: #{mimetype}" if formatter_class.nil?
+
+    formatter = formatter_class.new
+
+    region_apis = Config.instance.region_api[country]
+    halt 404, 'No Data Found for this request' if region_apis.nil? || region_apis.empty?
+
+    accepted_apis = []
+    region_apis.each do |api|
+      accepted_apis << api if valid_api?(api: api, method: method)
+    end
+
+    halt 404, 'No Data Found for this request' if accepted_apis.empty?
+
+    external_api = accepted_apis.first.new
+
+    RequestProcessor.new(formatter, external_api)
   end
 
-  def process_request
-    raise NotImplementedError, 'Method not implemented'
+  def valid_api?(api:, method:)
+    method_name = method
+
+    api.method_defined?(method_name)
   end
 
-  def handle_request
-    raise NotImplementedError, 'Method not implemented'
-  end
-
-  def define_routes
-    raise NotImplementedError, 'Method not implemented'
+  def process_request(request_processor, options)
+    request_processor.process({station: options[:station], date: options[:date]})
   end
 end
