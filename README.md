@@ -47,7 +47,17 @@ A Data Fetcher / Data Generator for a Bussiness Inteligence project.
 #### PDF
 // TODO Depending on the changes to the conception
 ## Source API
-Search.ch : https://search.ch/timetable/api/help
+
+### Search.ch
+
+[Search.ch](https://search.ch/) is a Swiss online service that provides various information and services, including a timetable API for public transportation. This API allows users to retrieve information about train schedules, connections, and stations. The API can be used to get details such as departure times, train lines, operators, and subsequent stops for a given station.
+
+#### API Documentation
+
+An OpenAPI specification for the Search.ch timetable API can be found [here](docs/externals_apis/search.ch.yaml). The documentation provides details about the available endpoints, request parameters, and response formats. The API supports various query parameters to filter and customize the results, such as specifying the station ID, date, time, and number of results.
+
+[Official documentation](https://search.ch/timetable/api/help) 
+
 ## Testing
 RSpec
 
