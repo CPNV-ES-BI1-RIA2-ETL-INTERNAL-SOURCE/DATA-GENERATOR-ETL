@@ -1,7 +1,7 @@
 require_relative 'templates/timetable'
 require_relative '../helpers/date'
 
-class PDFFormater
+class PDFFormatter
   attr_accessor :destination_data_structure, :origin_data_structure
 
   def initialize(origin_data_structure = {})
@@ -11,6 +11,7 @@ class PDFFormater
 
   # @param data [StationBoardResponse]
   def format(data)
+    data = data[:formatted_response]
     if data.class == StationBoardResponse
       date = DateTime.parse(data.connections[0].time)
       tt = Timetable.new

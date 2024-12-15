@@ -70,7 +70,7 @@ Usage Example:
 api = SearchAPI.new
 response = api.get_stationboard({:stop => "Yverdon-les-Bains", :date => "12/12/2024"})
 
-pdf = PDFFormater.new
+pdf = PDFFormatter.new
 pdf.format(response[:formatted_response])
 ```
 
