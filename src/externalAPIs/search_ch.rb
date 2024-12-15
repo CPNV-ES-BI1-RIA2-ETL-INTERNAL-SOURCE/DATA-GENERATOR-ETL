@@ -1,4 +1,5 @@
 require_relative 'external_api'
+require_relative 'models/stationboard_response'
 
 class SearchAPI < ExternalAPI
   base_uri 'search.ch'
@@ -10,7 +11,7 @@ class SearchAPI < ExternalAPI
 
   def get_stationboard(options)
     @options[:query].merge! options
-    self.class.get'/timetable/api/stationboard.json', @options
+    StationBoardResponse.new JSON.parse(self.class.get('/timetable/api/stationboard.json', @options).body, symbolize_names: true)
   end
 
   def get_connections(from, to, date)
