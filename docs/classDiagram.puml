@@ -57,7 +57,21 @@ class JSONformatter{
 }
 
 class PDFformatter{
+    + format(data: Map): String
 }
+
+class Timetable {
+  - table_data: Array
+  + initialize(): void
+  + document(): Prawn::Document
+  + draw_logo(path: String): void
+  + headers=(headers: Array): void
+  + draw_table(options: Map): void
+  + draw_heading(date: DateTime): void
+  + save(filename: String): void
+  + stop=(stop: Map): void
+}
+
 
 class Dotenv{
 }
@@ -67,6 +81,8 @@ formatter <|.. JSONformatter
 formatter <|.. PDFformatter
 
 formatter -right->DataStructureUtilities
+
+PDFformatter -left-> Timetable
 
 
 SearchCH .up.|> ExternalAPI
