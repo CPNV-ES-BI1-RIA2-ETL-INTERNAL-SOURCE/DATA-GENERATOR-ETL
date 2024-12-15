@@ -1,3 +1,6 @@
+require_relative 'templates/timetable'
+require_relative '../helpers/date'
+
 class PDFFormater
   attr_accessor :destination_data_structure, :origin_data_structure
 
@@ -6,7 +9,21 @@ class PDFFormater
     @destination_data_structure = {}
   end
 
+  # @param data [StationBoardResponse]
   def format(data)
-    raise NotImplementedError, 'Method not implemented'
+    if data.class == StationBoardResponse
+      date = DateTime.parse(data.connections[0].time)
+      tt = Timetable.new
+      tt.draw_logo File.expand_path('../../assets/images/sbb-logo.png', __dir__)
+      tt.headers = ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
+      tt.stop = data.stop
+      tt.draw_heading(date)
+      tt.draw_table({ :column_widths => [110, 50, 150, 1250, 50] }) do
+        data.connections.map do |connection|
+          [DateTime.parse(connection.time).strftime('%k %M'), connection.line, connection.terminal.name, connection.subsequent_stops.map { |s| s.name }.join(', ').to_s, connection.track]
+        end
+      end
+      tt.render
+    end
   end
 end
