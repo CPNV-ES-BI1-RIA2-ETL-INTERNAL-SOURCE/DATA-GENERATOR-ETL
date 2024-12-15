@@ -6,7 +6,19 @@ A Data Fetcher / Data Generator for a Bussiness Inteligence project.
 - Language: Ruby
 - API: Sinatra
 - HTTP Client: HTTParty
+
+### Run
+```shell
+bundle install
+ruby .\src\index.rb -p 8080
+```
+```Shell
+curl -X GET "http://localhost:8080/api/stationboard/switzerland/zurich?date=12/12/2024" \
+     -H "Accept: application/pdf" \
+     -o "stationboard.pdf"
+```
 ## API
+[OpenAPI](docs/api.yaml)
 ### Routes
 // TODO define what and how the "clients" will want the data. (Clients are the Extract team)
 #### JSON
