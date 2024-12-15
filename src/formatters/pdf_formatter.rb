@@ -11,6 +11,7 @@ class PDFFormatter
 
   # @param data [StationBoardResponse]
   def format(data)
+    data = data[:formatted_response]
     if data.class == StationBoardResponse
       date = DateTime.parse(data.connections[0].time)
       tt = Timetable.new
