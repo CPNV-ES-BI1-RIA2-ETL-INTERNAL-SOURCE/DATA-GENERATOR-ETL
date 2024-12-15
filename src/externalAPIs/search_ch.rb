@@ -4,7 +4,7 @@ require_relative 'models/stationboard_response'
 class SearchAPI < ExternalAPI
   base_uri 'search.ch'
 
-  def initialize(options)
+  def initialize(options = {})
     super(options)
     @options = { query: { show_tracks: "1", show_subsequent_stops: "1", time: '00:01' } }
   end
