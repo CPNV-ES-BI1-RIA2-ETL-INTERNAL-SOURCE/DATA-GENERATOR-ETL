@@ -8,9 +8,9 @@ require_relative './config'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
-  get '/api/stationboard/:region/:station' do
+  get '/api/stationboard/:region/:stop' do
     mimetype = request.env['HTTP_ACCEPT']
-    station = params['station']
+    stop = params['stop']
     date = params['date'] || Date.today.to_s
     region = params['region']
 
@@ -18,11 +18,10 @@ class Server < Sinatra::Base
 
     request_processor = construct_request_processor(mimetype: mimetype, country: region, method: external_api_method)
 
-    data = request_processor.process({ station: station, date: date }, external_api_method)
-
+    data = request_processor.process({ stop: stop, date: date }, external_api_method)
     status 200
     content_type mimetype
-    body data
+    data
   end
 
   not_found do
@@ -67,6 +66,6 @@ class Server < Sinatra::Base
   end
 
   def process_request(request_processor, options)
-    request_processor.process({station: options[:station], date: options[:date]})
+    request_processor.process({stop: options[:stop], date: options[:date]})
   end
 end
