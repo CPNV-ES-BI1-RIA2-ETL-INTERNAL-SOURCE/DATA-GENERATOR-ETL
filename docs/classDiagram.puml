@@ -3,29 +3,18 @@ skinparam classAttributeIconSize 0
 
 class Server{
 + run(): void
-- constructRequest(): void
+- construct_request_processor(): void
 - processRequest(): void
-- handleRequest(): void
+- valid_api?(api: ExternalAPI, method: String): boolean
 }
 
 class RequestProcessor{
-    - formatter: formatter
-    - externalAPI: ExternalAPI
     + initialize(): RequestProcessor
     + Process(): String
 }
 
 class ExternalAPI{
-    - dataStructure: Map
-    - token: String
-    - apiKey: String
-    - url: String
     + initialize(options: Map): ExternalAPI
-    + getDataStructure(): Map
-    + getStationboard(station: String, date: DateTime): String
-    + getConnections(from: String, to: String, date: DateTime): String
-    + getStations(query: String): String
-    - authenticate(): void
 }
 
 class SearchCH{
@@ -38,10 +27,6 @@ interface formatter{
     - originDataStructure: Map
     + initialize(originDataStructure: Map = {}): formatter
     + format(data: Map): String
-}
-
-class DataStructureUtilities{
-    + {static} remapJSON(data: String, originStructure: Map, DestinationStructure: Map): String
 }
 
 class DeutschebahnCOM {
@@ -88,11 +73,9 @@ RequestProcessor -right-> formatter
 formatter <|.. JSONformatter
 formatter <|.. PDFformatter
 
-formatter -right->DataStructureUtilities
+PDFformatter -right-> Timetable
 
-PDFformatter -left-> Timetable
-
-
+ExternalAPI <|.left. HTTParty
 SearchCH .up.|> ExternalAPI
 DeutschebahnCOM .up.|> ExternalAPI
 SheneoIO .up.|> ExternalAPI
