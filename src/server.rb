@@ -8,7 +8,7 @@ require_relative './config'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
-  get '/api/stationboard/:region/:stop' do
+  get '/api/v1/stationboard/:region/:stop' do
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
     date = params['date'] || Date.today.to_s

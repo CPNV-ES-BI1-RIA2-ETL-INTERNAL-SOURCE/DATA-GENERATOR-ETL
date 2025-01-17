@@ -22,20 +22,20 @@ RSpec.describe Server, type: :request do
   describe 'GET /api/stationboard/:region/:station' do
     context 'given a valid region and station' do
       it 'returns a 200 status and data in JSON format' do
-        get "/api/stationboard/#{region}/#{station}", {}, 'HTTP_ACCEPT' => valid_mimetype
+        get "/api/v1/stationboard/#{region}/#{station}", {}, 'HTTP_ACCEPT' => valid_mimetype
 
         expect(last_response.status).to eq(200)
         expect(last_response.headers['Content-Type']).to include(valid_mimetype)
       end
 
       it 'returns a 415 status when the mimetype is unsupported' do
-        get "/api/stationboard/#{region}/#{station}", {}, 'HTTP_ACCEPT' => invalid_mimetype
+        get "/api/v1/stationboard/#{region}/#{station}", {}, 'HTTP_ACCEPT' => invalid_mimetype
 
         expect(last_response.status).to eq(415)
       end
 
       it 'returns a 404 status when the station or region is invalid' do
-        get "/api/stationboard/invalid_region/invalid_station", {}, 'HTTP_ACCEPT' => valid_mimetype
+        get "/api/v1/stationboard/invalid_region/invalid_station", {}, 'HTTP_ACCEPT' => valid_mimetype
 
         expect(last_response.status).to eq(404)
       end
@@ -43,7 +43,7 @@ RSpec.describe Server, type: :request do
 
     context 'given a valid region, station, and date' do
       it 'returns a 200 status and data in JSON format' do
-        get "/api/stationboard/#{region}/#{station}?date=#{date}", {}, 'HTTP_ACCEPT' => valid_mimetype
+        get "/api/v1/stationboard/#{region}/#{station}?date=#{date}", {}, 'HTTP_ACCEPT' => valid_mimetype
 
         expect(last_response.status).to eq(200)
         expect(last_response.headers['Content-Type']).to include(valid_mimetype)
@@ -52,7 +52,7 @@ RSpec.describe Server, type: :request do
 
     context 'given an invalid region, station, or date' do
       it 'returns a 404 status' do
-        get "/api/stationboard/invalid_region/invalid_station?date=#{date}", {}, 'HTTP_ACCEPT' => valid_mimetype
+        get "/api/v1/stationboard/invalid_region/invalid_station?date=#{date}", {}, 'HTTP_ACCEPT' => valid_mimetype
 
         expect(last_response.status).to eq(404)
       end
