@@ -10,7 +10,7 @@ RSpec.describe Server, type: :request do
   include Rack::Test::Methods
 
   let(:station) { 'lausanne' }
-  let(:region) { 'switzerland' }
+  let(:region) { 'CH' }
   let(:date) { '2024-12-15' }
   let(:valid_mimetype) { 'application/json' }
   let(:invalid_mimetype) { 'application/xml' }

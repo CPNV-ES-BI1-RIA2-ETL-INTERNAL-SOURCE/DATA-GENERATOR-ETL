@@ -21,10 +21,10 @@ paths:
         - name: country
           in: path
           required: true
-          description: Le nom du pays (par exemple "switzerland").
+          description: Le code iso du pays (par exemple "CH" pour Suisse).
           schema:
             type: string
-            example: switzerland
+            example: CH
         - name: station
           in: path
           required: true

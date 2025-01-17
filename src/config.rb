@@ -13,7 +13,7 @@ class Config
 
   def initialize
     @region_api = {
-      'switzerland' => [SearchAPI]
+      'CH' => [SearchAPI]
     }
     @accepted_mimetypes = ['application/json', 'application/pdf']
     @formatters = {
