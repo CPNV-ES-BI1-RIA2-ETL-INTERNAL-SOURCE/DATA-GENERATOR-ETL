@@ -9,7 +9,7 @@ servers:
     description: Serveur local pour l'API Stationboard
 
 paths:
-  /api/v1/stationboard/{country}/{station}:
+  /api/v1/stationboards/{country}/{station}:
     get:
       summary: Récupère les horaires des stations pour une ville donnée
       description: |
