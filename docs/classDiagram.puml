@@ -75,7 +75,7 @@ formatter <|.. PDFformatter
 
 PDFformatter -right-> Timetable
 
-ExternalAPI <|.left. HTTParty
+ExternalAPI .left.|> HTTParty
 SearchCH .up.|> ExternalAPI
 DeutschebahnCOM .up.|> ExternalAPI
 SheneoIO .up.|> ExternalAPI
@@ -90,5 +90,6 @@ ExternalAPI -left-> Dotenv
 'Main will be just a file, maybe called index, doesn't really matter
 main -up-> Server
 main -right-> Config
+Timetable -right-> prawn
 
 @enduml
