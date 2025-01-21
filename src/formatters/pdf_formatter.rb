@@ -21,7 +21,9 @@ class PDFFormatter
       tt.draw_heading(date)
       tt.draw_table({ :column_widths => [110, 50, 150, 1250, 50] }) do
         data.connections.map do |connection|
-          [DateTime.parse(connection.time).strftime('%k %M'), connection.line, connection.terminal.name, connection.subsequent_stops.map { |s| s.name }.join(', ').to_s, connection.track]
+          track = ""
+          track = connection.track.value! if connection.track.class != Dry::Monads::Maybe::None
+          [DateTime.parse(connection.time).strftime('%k %M'), connection.line, connection.terminal.name, connection.subsequent_stops.map { |s| s.name }.join(', ').to_s, track]
         end
       end
       tt.render
