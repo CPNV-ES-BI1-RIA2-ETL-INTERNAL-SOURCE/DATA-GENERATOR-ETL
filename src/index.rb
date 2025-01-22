@@ -8,4 +8,5 @@ ARGV.each_with_index do |arg, index|
   port = ARGV[index + 1].to_i if arg == '-p' && ARGV[index + 1]
 end
 
+App.instance
 App::run port: port
