@@ -5,6 +5,7 @@ require 'json'
 require_relative './externalAPIs/search_ch'
 require_relative './formatters/json_formatter'
 require_relative './formatters/pdf_formatter'
+require_relative './formatters/xml_formatter'
 
 # Config class that holds the configuration of the server mainly the static data
 class Config
