@@ -17,7 +17,7 @@ class App
   end
 
   def self.run(port: 8080)
-    Server::start_server!(port: 8080)
+    Server::start_server!(port: port)
   end
 
 end
