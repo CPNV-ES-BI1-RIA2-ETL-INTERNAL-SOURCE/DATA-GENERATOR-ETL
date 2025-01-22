@@ -74,6 +74,22 @@ curl -X GET "http://localhost:8080/api/stationboard/switzerland/zurich?date=12/1
 rspec
 ```
 
+### Docker
+
+#### Build the image
+
+```bash
+docker build -t data-generator .
+```
+
+#### Run the container
+
+```bash
+export AWS_ACCESS_KEY_ID=<AWS_KEY>
+export AWS_SECRET_ACCESS_KEY=<AWS_SECRET>
+docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-generator
+```
+
 ## Directory structure
 
 ```shell
