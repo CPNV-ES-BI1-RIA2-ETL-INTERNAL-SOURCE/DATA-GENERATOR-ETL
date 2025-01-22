@@ -13,7 +13,14 @@ class Server < Sinatra::Base
     halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance.config['api']['version']
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
-    date = params['date'] || Date.today.to_s
+
+    if params['date']
+      halt 400, 'Invalid Date Format' unless params['date'].match?(%r{^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/\d{4}$})
+      date = params['date']
+    else
+      date = Date.today.to_s
+    end
+
     region = params['region']
 
     external_api_method = "#{request.env['REQUEST_METHOD'].downcase}_stationboard"
@@ -30,6 +37,7 @@ class Server < Sinatra::Base
     status 404
     body 'Not found'
   end
+
 
   def self.start_server!(port: 8080)
     set :port, port
