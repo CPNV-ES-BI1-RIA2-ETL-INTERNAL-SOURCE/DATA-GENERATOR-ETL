@@ -95,6 +95,7 @@ docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-gener
 ```shell
 ├── Gemfile                       # Dependencies
 ├── Gemfile.lock                  
+├── Dockerfile                    # Docker image configuration                  
 ├── README.md                     
 ├── assets                        # Images or other assets
 │   └── images
