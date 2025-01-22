@@ -21,7 +21,7 @@ class Server < Sinatra::Base
 
     data = request_processor.process({ stop: stop, date: date }, external_api_method)
     status 200
-    content_type mimetype
+    content_type 'application/json'
     data
   end
 
