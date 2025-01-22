@@ -1,0 +1,23 @@
+api:
+  version: '1.1'
+  prefix: '/api'
+formatters:
+  - type: 'application/json'
+    class: 'JSONFormatter'
+    response:
+      type: 'application/json'
+      service: 's3'
+  - type: 'application/pdf'
+    class: 'PDFFormatter'
+    response:
+      type: 'application/json'
+      service: 'http'
+
+storage:
+  type: 's3'
+  provider: 'aws'
+  bucket: 'my-bucket'
+  region: 'eu-south-1'
+  signed_url_expiration_time: 3600
+  access_key: ${AWS_ACCESS_KEY_ID}
+  secret_key: ${AWS_SECRET_ACCESS_KEY}

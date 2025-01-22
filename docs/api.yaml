@@ -2,33 +2,33 @@ openapi: 3.0.0
 info:
   title: Stationboard API
   description: Documentation de l'API pour récupérer les horaires des stations, prenant en charge les formats JSON et PDF.
-  version: 1.0.2
+  version: 1.1.0
 
 servers:
   - url: http://localhost:8080
     description: Serveur local pour l'API Stationboard
 
 paths:
-  /api/stationboard/{country}/{station}:
+  /api/v1.1/stationboards/{country}/{stop}:
     get:
       summary: Récupère les horaires des stations pour une ville donnée
       description: |
         Retourne les horaires des connexions pour un pays et une ville spécifiés, à une date donnée. 
         Le format de la réponse dépend de l'entête `Accept` :
         - `application/json` : Retourne les données détaillées en JSON.
-        - `application/pdf` : Retourne un document PDF.
+        - `application/pdf` : Retourne une url de récupération du .
       parameters:
         - name: country
           in: path
           required: true
-          description: Le nom du pays (par exemple "switzerland").
+          description: Le code iso du pays (par exemple "CH" pour Suisse).
           schema:
             type: string
-            example: switzerland
-        - name: station
+            example: CH
+        - name: stop
           in: path
           required: true
-          description: "Nom ou id de l'arrêt (station) pour lequel récupérer les informations. (exemple: Yverdon-les-Bains ou <code>8504200</code>)"
+          description: "Nom ou id de l'arrêt (stop) pour lequel récupérer les informations. (exemple: Yverdon-les-Bains ou <code>8504200</code>)"
           schema:
             type: string
             example: zurich
@@ -39,7 +39,7 @@ paths:
           schema:
             type: string
             format: date
-            example: "12/12/2024"
+            example: "01/17/2024"
       responses:
         '200':
           description: Réponse réussie contenant les informations des horaires.
@@ -176,8 +176,18 @@ paths:
                         dep: "2024-12-01T13:50:00"
             application/pdf:
               schema:
-                type: string
-                format: binary
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: created
+                  file:
+                    type: string
+                    example: https://s3.eu-south-1.amazonaws.com/dev.data.generator.cld.education/2025-01-17/8504200.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA2KFJKL4O35LD5P3Z%2F20250122%2Feu-south-1%2Fs3%2Faws4_request&X-Amz-Date=20250122T084532Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1e66abdfdf70bafa9f4cf192ad667ce0c5bee52ab438579e9663e15a5cf341be
+                  validity_duration:
+                    type: integer
+                    example: 3600
+                    description: Durée de validité de l'URL en secondes
               description: Contenu PDF binaire contenant les horaires de la station demandée.
         '400':
           description: Requête invalide (paramètre manquant ou incorrect).

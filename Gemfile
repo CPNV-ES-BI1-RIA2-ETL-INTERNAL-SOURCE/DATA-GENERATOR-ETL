@@ -12,7 +12,10 @@ gem 'prawn'
 gem 'prawn-table'
 gem 'dry-struct'
 gem 'dry-validation'
+gem 'dry-monads'
 gem 'ostruct'
+gem 'aws-sdk-s3'
+gem 'ox'
 
 # Testing
 gem 'rspec'

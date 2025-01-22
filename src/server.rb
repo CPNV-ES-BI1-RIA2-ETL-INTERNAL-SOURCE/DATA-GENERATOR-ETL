@@ -5,10 +5,12 @@ require 'puma'
 require 'date'
 require_relative './services/request_processor'
 require_relative './config'
+require_relative 'app'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
-  get '/api/stationboard/:region/:stop' do
+  get '/api/:v/stationboards/:region/:stop' do
+    halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance.config['api']['version']
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
     date = params['date'] || Date.today.to_s
@@ -20,7 +22,7 @@ class Server < Sinatra::Base
 
     data = request_processor.process({ stop: stop, date: date }, external_api_method)
     status 200
-    content_type mimetype
+    content_type 'application/json'
     data
   end
 
@@ -38,13 +40,13 @@ class Server < Sinatra::Base
   private
 
   def construct_request_processor(country:, method:, mimetype: 'application/json')
-    formatter_class = Config.instance.formatters[mimetype]
+    formatter_class = App.instance.config.formatters[mimetype]
 
     halt 415, "Unsupported Media Type: #{mimetype}" if formatter_class.nil?
 
     formatter = formatter_class.new
 
-    region_apis = Config.instance.region_api[country]
+    region_apis = App.instance.config.region_api[country]
     halt 404, 'No Data Found for this request' if region_apis.nil? || region_apis.empty?
 
     accepted_apis = []

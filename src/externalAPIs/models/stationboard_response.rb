@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 require 'dry-struct'
 require 'dry-types'
+require 'dry-monads'
 require 'httparty'
+
+Dry::Types.load_extensions(:maybe)
 
 module Types
   include Dry.Types
@@ -48,7 +51,7 @@ class Connection < Dry::Struct
   attribute :operator, Types::String
   attribute :color, Types::String.optional
   attribute :type_name, Types::String
-  attribute :track, Types::String.optional
+  attribute :track, Types::String.maybe
   attribute :terminal, Terminal
   attribute :subsequent_stops, Types::Array.of(SubsequentStop).optional
 end
