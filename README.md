@@ -56,15 +56,14 @@ Test the API with the following command to retrieve the stationboard for Zurich 
 format:
 
 ```shell
-curl -X GET "http://localhost:8080/api/v1/stationboards/CH/zurich?date=01/13/2025" \
+curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2025" \
      -H "Accept: application/pdf" \
-     -o "stationboard.pdf"
 ```
 
 or in JSON format:
 
 ```shell
-curl -X GET "http://localhost:8080/api/v1/stationboards/CH/zurich?date=01/13/2025" \
+curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2025" \
      -H "Accept: application/json"
 ```
 

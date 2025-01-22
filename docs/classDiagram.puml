@@ -8,6 +8,14 @@ class Server{
 - valid_api?(api: ExternalAPI, method: String): boolean
 }
 
+class App << (S,#FF7700) Singleton >> {
+    + config: Config
+    + bucket_service: BucketService
+    + App()
+    {static}+ run(port: Integer): Server
+    + interface(): App
+}
+
 class RequestProcessor{
     + initialize(): RequestProcessor
     + Process(): String
@@ -43,6 +51,8 @@ class JSONformatter{
 
 class PDFformatter{
     + format(data: Map): String
+    - filenamer(date: DateTime, request: Map): String
+    - create_response(filename): String
 }
 
 class Timetable {
@@ -61,12 +71,21 @@ class Timetable {
 class Dotenv{
 }
 
-'Singleton
 class Config{
     'available regions will have one or more API classes associated with it
     + regionAPI: Map
-    + instance(): Config
+    + formatter: Map
+    + config: Map
     + load(): void
+    + get(key: String): String|Map
+}
+
+class BucketService {
+    + default_bucket: String
+    + client: AWS::S3::S3Client
+    + BucketService(client: AWS::S3::S3Client, default_bucket: String)
+    + upload(content: String, filename: String, bucket_name: String): AWS::S3::Types::PutObjectOutput
+    + get_presigned_url(object_key: String): String
 }
 
 RequestProcessor -right-> formatter
@@ -84,12 +103,23 @@ SncfCOM .up.|> ExternalAPI
 Server -up-> RequestProcessor
 RequestProcessor -left-> ExternalAPI
 
+App .right.> Server
+App -right-> Config
+BucketService -right-> AWS::S3
+
 'Dotenv file not a class
 ExternalAPI -left-> Dotenv
 
 'Main will be just a file, maybe called index, doesn't really matter
-main -up-> Server
-main -right-> Config
-Timetable -right-> prawn
+main -up-> App
+Timetable -right-> Prawn
+
+package Prawn <<Frame>> {
+}
+
+package AWS <<Frame>> {
+    package S3 <<Frame>> {
+    }
+}
 
 @enduml
