@@ -5,6 +5,7 @@ require 'aws-sdk-s3'
 require_relative './config'
 require_relative './dependency_injection/di'
 require_relative './services/bucket_service'
+require_relative './server'
 
 class App
   include Singleton
