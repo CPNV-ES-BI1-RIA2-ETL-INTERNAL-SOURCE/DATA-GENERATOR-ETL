@@ -2,14 +2,14 @@ openapi: 3.0.0
 info:
   title: Stationboard API
   description: Documentation de l'API pour récupérer les horaires des stations, prenant en charge les formats JSON et PDF.
-  version: 1.0.3
+  version: 1.1.0
 
 servers:
   - url: http://localhost:8080
     description: Serveur local pour l'API Stationboard
 
 paths:
-  /api/v1/stationboards/{country}/{stop}:
+  /api/v1.1/stationboards/{country}/{stop}:
     get:
       summary: Récupère les horaires des stations pour une ville donnée
       description: |

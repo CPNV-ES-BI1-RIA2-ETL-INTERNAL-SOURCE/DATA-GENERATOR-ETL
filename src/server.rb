@@ -9,7 +9,8 @@ require_relative 'app'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
-  get '/api/v1/stationboards/:region/:stop' do
+  get '/api/:v/stationboards/:region/:stop' do
+    halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance.config['api']['version']
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
     date = params['date'] || Date.today.to_s
