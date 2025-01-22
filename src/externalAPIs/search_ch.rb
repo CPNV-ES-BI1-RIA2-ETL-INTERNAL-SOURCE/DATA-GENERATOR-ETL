@@ -13,7 +13,7 @@ class SearchAPI < ExternalAPI
     @options.merge!({ query: { show_tracks: "1", show_subsequent_stops: "1", time: '00:01' } })
     @options[:query].merge! options
     response = self.class.get('/timetable/api/stationboard.json', @options)
-    {:response => response, :formatted_response => StationBoardResponse.new(JSON.parse(response.body, symbolize_names: true))}
+    {:response => response, :request => options, :formatted_response => StationBoardResponse.new(JSON.parse(response.body, symbolize_names: true))}
   end
 
   def get_connections(from, to, date)
