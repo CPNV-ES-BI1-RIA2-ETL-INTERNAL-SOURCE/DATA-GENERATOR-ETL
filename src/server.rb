@@ -5,6 +5,7 @@ require 'puma'
 require 'date'
 require_relative './services/request_processor'
 require_relative './config'
+require_relative 'app'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
@@ -38,13 +39,13 @@ class Server < Sinatra::Base
   private
 
   def construct_request_processor(country:, method:, mimetype: 'application/json')
-    formatter_class = Config.instance.formatters[mimetype]
+    formatter_class = App.instance.config.formatters[mimetype]
 
     halt 415, "Unsupported Media Type: #{mimetype}" if formatter_class.nil?
 
     formatter = formatter_class.new
 
-    region_apis = Config.instance.region_api[country]
+    region_apis = App.instance.config.region_api[country]
     halt 404, 'No Data Found for this request' if region_apis.nil? || region_apis.empty?
 
     accepted_apis = []
