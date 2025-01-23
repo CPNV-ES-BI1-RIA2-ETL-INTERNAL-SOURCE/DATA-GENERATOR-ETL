@@ -29,7 +29,7 @@ class Timetable
   def draw_table(options)
     data = yield
     @table_data += data
-    table(@table_data, header: false, column_widths: options[:column_widths], cell_style: { inline_format: true })
+    table(@table_data, header: true, column_widths: options[:column_widths], cell_style: { inline_format: true })
   end
 
   def draw_heading(date)
