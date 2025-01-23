@@ -23,11 +23,7 @@ class XMLFormatter
     case data
     when Hash
       data.each do |key, value|
-        if key.to_s.include?('*')
-          xml.send(key.to_s, value)
-        else
-          xml.send(key.to_s) { parse_json_object(value, xml) }
-        end
+        xml.send(key.to_s.gsub('*', '_')) { parse_json_object(value, xml) }
       end
     when Array
       data.each do |item|
