@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Stationboard API
   description: Documentation de l'API pour récupérer les horaires des stations, prenant en charge les formats JSON et PDF.
-  version: 1.1.0
+  version: 1.1.1
 
 servers:
   - url: http://localhost:8080
@@ -21,7 +21,7 @@ paths:
         - name: country
           in: path
           required: true
-          description: Le code iso du pays (par exemple "CH" pour Suisse).
+          description: Le code iso du pays (par example "CH" pour Suisse).
           schema:
             type: string
             example: CH
@@ -34,7 +34,17 @@ paths:
             example: zurich
         - name: date
           in: query
-          required: true
+          required: false
+          default: "today"
+          description: La date au format `MM/DD/YYYY`.
+          schema:
+            type: string
+            format: date
+            example: "01/17/2024"
+        - name: mode
+          in: query
+          required: false
+          default: "departures"
           description: La date au format `MM/DD/YYYY`.
           schema:
             type: string

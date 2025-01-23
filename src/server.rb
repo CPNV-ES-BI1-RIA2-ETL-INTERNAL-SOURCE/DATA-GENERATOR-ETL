@@ -15,12 +15,13 @@ class Server < Sinatra::Base
     stop = params['stop']
     date = params['date'] || Date.today.to_s
     region = params['region']
+    mode = params['mode'] || 'departures'
 
     external_api_method = "#{request.env['REQUEST_METHOD'].downcase}_stationboard"
 
     request_processor = construct_request_processor(mimetype: mimetype, country: region, method: external_api_method)
 
-    data = request_processor.process({ stop: stop, date: date }, external_api_method)
+    data = request_processor.process({ stop: stop, date: date, mode: mode }, external_api_method)
     status 200
     content_type 'application/json'
     data
