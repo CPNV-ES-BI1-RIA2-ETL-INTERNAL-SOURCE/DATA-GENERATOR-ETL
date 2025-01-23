@@ -12,6 +12,11 @@ formatters:
     response:
       type: 'application/json'
       service: 'http'
+  - type: 'application/xml'
+    class: 'XMLFormatter'
+    response:
+      type: 'application/xml'
+      service: 'http'
 
 storage:
   type: 's3'

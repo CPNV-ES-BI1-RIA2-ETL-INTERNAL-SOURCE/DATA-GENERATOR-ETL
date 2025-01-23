@@ -16,6 +16,7 @@ gem 'dry-monads'
 gem 'ostruct'
 gem 'aws-sdk-s3'
 gem 'ox'
+gem 'nokogiri'
 
 # Testing
 gem 'rspec'
