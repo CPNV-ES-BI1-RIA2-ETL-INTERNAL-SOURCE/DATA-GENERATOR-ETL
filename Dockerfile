@@ -7,8 +7,6 @@ WORKDIR /app
 COPY . .
 RUN bundle install
 
-RUN rspec
-
 EXPOSE 8088
 
 CMD ["ruby", "./src/index.rb", "-p", "8088"]
