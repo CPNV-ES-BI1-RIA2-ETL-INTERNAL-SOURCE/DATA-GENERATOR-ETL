@@ -44,6 +44,7 @@ class Server < Sinatra::Base
   def self.start_server!(port: 8080)
     set :port, port
     set :bind, '0.0.0.0'
+    set :environment, :production
 
     run!
   end
