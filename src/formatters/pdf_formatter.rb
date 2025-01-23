@@ -27,9 +27,11 @@ class PDFFormatter
           [DateTime.parse(connection.time).strftime('%k %M'), connection.line, connection.terminal.name, connection.subsequent_stops.map { |s| s.name }.join(', ').to_s, track]
         end
       end
+      App.instance[:logger].debug("Starting PDF generation for #{request[:stop]}")
       content = tt.render
+      App.instance[:logger].debug("PDF generation for #{request[:stop]} finished")
       filename = filenamer date, request
-      App.instance.bucket_service.upload(content, filename, App.instance.bucket_service.default_bucket)
+      App.instance[:bucket_service].upload(content, filename, App.instance[:bucket_service].default_bucket)
       create_response filename
     end
   end
@@ -39,6 +41,6 @@ class PDFFormatter
   end
 
   def create_response(filename)
-    { 'status' => 'created', 'file' => App.instance.bucket_service.get_presigned_url(filename), 'validity_duration' => App.instance.config['storage']['signed_url_expiration_time'] }.to_json
+    { 'status' => 'created', 'file' => App.instance[:bucket_service].get_presigned_url(filename), 'validity_duration' => App.instance[:config]['storage']['signed_url_expiration_time'] }.to_json
   end
 end

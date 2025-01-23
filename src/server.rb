@@ -10,7 +10,8 @@ require_relative 'app'
 # Server class that handles the API requests
 class Server < Sinatra::Base
   get '/api/:v/stationboards/:region/:stop' do
-    halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance.config['api']['version']
+    App.instance[:logger].info("#{request.env['REQUEST_METHOD']} #{request.env['REQUEST_URI']}")
+    halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance[:config]['api']['version']
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
 
@@ -50,13 +51,13 @@ class Server < Sinatra::Base
   private
 
   def construct_request_processor(country:, method:, mimetype: 'application/json')
-    formatter_class = App.instance.config.formatters[mimetype]
+    formatter_class = App.instance[:config].formatters[mimetype]
 
     halt 415, "Unsupported Media Type: #{mimetype}" if formatter_class.nil?
 
     formatter = formatter_class.new
 
-    region_apis = App.instance.config.region_api[country]
+    region_apis = App.instance[:config].region_api[country]
     halt 404, 'No Data Found for this request' if region_apis.nil? || region_apis.empty?
 
     accepted_apis = []
