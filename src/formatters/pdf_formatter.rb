@@ -20,7 +20,7 @@ class PDFFormatter
       tt.headers = ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
       tt.stop = data.stop
       tt.draw_heading(date)
-      tt.draw_table({ :column_widths => [110, 50, 150, 1250, 50] }) do
+      tt.draw_table({ :column_widths => [110, 50, 150, 2940, 50] }) do
         data.connections.map do |connection|
           track = ""
           track = connection.track.value! if connection.track.class != Dry::Monads::Maybe::None

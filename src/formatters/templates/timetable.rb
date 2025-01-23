@@ -15,11 +15,11 @@ class Timetable
   end
 
   def document
-    @document ||= Prawn::Document.new(page_size: 'A2', page_layout: :landscape, margin: 30)
+    @document ||= Prawn::Document.new(page_size: 'A0', page_layout: :landscape, margin: 30)
   end
 
   def draw_logo(path)
-    image path, at: [1410, 1130], width: 200
+    image path, at: [3100, 2320], width: 200
   end
 
   def headers= (headers)
@@ -29,7 +29,7 @@ class Timetable
   def draw_table(options)
     data = yield
     @table_data += data
-    table(@table_data, header: true, column_widths: options[:column_widths], cell_style: { inline_format: true })
+    table(@table_data, header: false, column_widths: options[:column_widths], cell_style: { inline_format: true })
   end
 
   def draw_heading(date)
