@@ -25,7 +25,7 @@ More details can be found in the [project wiki](https://github.com/CPNV-ES-BI1-S
 ### Prerequisites
 
 * Ruby 3.0 or later [official doc](https://www.ruby-lang.org/fr/downloads/)
-    * or use Rbenv [official doc](https://github.com/rbenv/rbenv#readme)
+    * or use Rbenv 1.3.2 [official doc](https://github.com/rbenv/rbenv#readme)
 * Git version 2.47.1 or later [official doc](https://git-scm.com/)
 * Bundler 2.5.21 or later (already installed with ruby) [official doc](https://bundler.io/)
 
