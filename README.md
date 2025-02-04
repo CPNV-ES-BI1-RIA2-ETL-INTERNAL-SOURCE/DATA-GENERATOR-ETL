@@ -178,8 +178,6 @@ docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-gener
 
 The project is released under a [MIT license](./LICENSE).
 
-Copyright (c) 2024 CPNV - [cpnv.ch](https://cpnv.ch).
-
 ## Contact
 
 If needed you can create an issue on GitHub we will try to respond as quickly as possible.
