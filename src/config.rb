@@ -13,7 +13,12 @@ class Config
   attr_reader :region_api, :accepted_mimetypes, :formatters
 
   def initialize
-    @config = YAML.load_file('config.yml')
+    cf = File.open('config.yml').read
+    ENV.each do |k, v|
+      cf.gsub! "${"+k+"}", v
+    end
+
+    @config = YAML.load(cf)
     @region_api = {
       'CH' => [SearchAPI]
     }
