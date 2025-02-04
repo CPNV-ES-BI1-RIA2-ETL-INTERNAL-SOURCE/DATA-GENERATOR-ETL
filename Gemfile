@@ -17,6 +17,8 @@ gem 'ostruct'
 gem 'aws-sdk-s3'
 gem 'ox'
 gem 'nokogiri'
+gem 'argv'
+gem 'dotenv'
 
 # Testing
 gem 'rspec'
