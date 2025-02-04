@@ -48,9 +48,35 @@ bundle install
 
 #### Run the server
 
+**index.rb** — Script pour démarrer le serveur Ruby
+
+##### COMMAND
+
 ```bash
-ruby .\src\index.rb -p 8080
+ruby ./src/index.rb [OPTIONS]
 ```
+
+The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
+
+##### OPTIONS
+
+**-p \<port>**
+:   Sets the port on which the application listens.  
+Default: `8080`  
+Example: `ruby ./src/index.rb -p 8080` 
+
+**-d**, **--dev**, **--development**
+:   Starts the server in development mode.  
+Default: **`production`**  
+Example: `ruby ./src/index.rb --dev`
+
+**-t**, **--test**
+:   Starts the server in test mode.  
+Example: `ruby ./src/index.rb -t`
+
+##### NOTES
+If no option is specified, the application will run with default settings (typically production mode and the default port).
+
 
 Test the API with the following command to retrieve the stationboard for Zurich on the 12th of December 2024 in PDF
 format:
@@ -73,15 +99,17 @@ curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2
 rspec
 ```
 
-### Docker
+### On production environment
 
-#### Build the image
+#### Docker
+
+##### Build the image
 
 ```bash
 docker build -t data-generator .
 ```
 
-#### Run the container
+##### Run the container
 
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_KEY>
