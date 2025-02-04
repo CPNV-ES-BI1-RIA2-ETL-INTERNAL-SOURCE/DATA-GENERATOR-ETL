@@ -70,7 +70,11 @@ curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2
 #### Run the tests
 
 ```bash
+# Run all tests
 rspec
+
+# Run a specific test
+rspec spec/services/stationboard_service_spec.rb
 ```
 
 ### Docker
