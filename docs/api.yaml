@@ -16,7 +16,7 @@ paths:
         Retourne les horaires des connexions pour un pays et une ville spécifiés, à une date donnée. 
         Le format de la réponse dépend de l'entête `Accept` :
         - `application/json` : Retourne les données détaillées en JSON.
-        - `application/pdf` : Retourne une url de récupération du .
+        - `application/pdf` : Retourne un json contenant l'url de récupération du fichier PDF.
         - `application/xml` : Retourne les données détaillées en XML.
       parameters:
         - name: country
