@@ -1,5 +1,6 @@
 # frozen_string_literal: true
-
+require 'dotenv/load'
+require 'argv'
 require_relative 'app'
 
 port = 8088
