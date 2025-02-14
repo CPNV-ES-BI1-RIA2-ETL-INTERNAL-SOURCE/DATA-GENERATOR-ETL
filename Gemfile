@@ -1,3 +1,5 @@
+# TODO NGY https://bundler.io/guides/using_bundler_in_applications.html#installing-gems---bundle-install
+
 source 'https://rubygems.org'
 
 # Ruby Version

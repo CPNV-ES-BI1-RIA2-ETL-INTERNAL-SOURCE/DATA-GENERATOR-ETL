@@ -22,6 +22,7 @@ describe SearchAPI do
   end
 
   describe '#stationboard' do
+    # TODO missing context description
     let(:station) { 'Yverdon-les-Bains' }
     let(:date) { '12/12/2024' }
     let(:response) { double('HTTParty::Response') }

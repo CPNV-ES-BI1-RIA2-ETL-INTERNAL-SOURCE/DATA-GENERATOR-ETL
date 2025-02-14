@@ -14,11 +14,13 @@ class SearchAPI < ExternalAPI
     @options[:query].merge! options
     url = '/timetable/api/stationboard.json'
     App.instance[:logger].debug("Call API => url: #{url}, params: #{@options[:query]}")
+    # TODO NGY - use the url variable set in line 15
     response = self.class.get('/timetable/api/stationboard.json', @options)
     App.instance[:logger].debug("Response for #{url}, content: #{response.body[0..100]}")
     {:response => response, :request => options, :formatted_response => StationBoardResponse.new(JSON.parse(response.body, symbolize_names: true))}
   end
 
+  # TODO - either implement or remove it
   def get_connections(from, to, date)
     raise NotImplementedError, 'Method not implemented'
   end

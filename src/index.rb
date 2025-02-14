@@ -2,6 +2,8 @@
 
 require_relative 'app'
 
+# TODO NGY - regarding the readme file, port number comes from argument command line (run server)
+# Is it a "default" value in "case of" ?
 port = 8088
 
 ARGV.each_with_index do |arg, index|

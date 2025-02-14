@@ -3,6 +3,7 @@
 require 'logger'
 
 class MultiLogger
+
   def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_file: './logs/logs.log')
     @console_logger = Logger.new(STDOUT)
     @console_logger.level = console_level

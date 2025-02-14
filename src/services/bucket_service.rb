@@ -2,6 +2,10 @@
 
 class BucketService
 
+  # TODO This is a S3 Bucket Service. Interface is missing.
+  # TODO rethink the idea of having a private variable for the bucket name. 
+  # This is highly restrictive when working with multiple buckets. What about a static class ?
+  # TODO You haven't applied what we studied at the beginning of the module.
   attr :client, :default_bucket
 
   def initialize(client, default_bucket)
