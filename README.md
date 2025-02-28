@@ -103,6 +103,21 @@ rspec
 rspec spec/services/stationboard_service_spec.rb
 ```
 
+#### Run the linter
+
+This project uses [Rubocop](https://rubocop.org/) to enforce consistent code style. To run the linter:
+
+```bash
+# Run Rubocop on all files
+bundle exec rubocop
+
+# Run Rubocop with auto-correct
+bundle exec rubocop -a
+
+# Run Rubocop with safe auto-correct
+bundle exec rubocop --safe-auto-correct
+```
+
 ### On production environment
 
 #### Docker
