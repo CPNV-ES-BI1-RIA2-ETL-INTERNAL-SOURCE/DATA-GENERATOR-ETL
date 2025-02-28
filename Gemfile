@@ -23,11 +23,8 @@ gem 'argv'
 gem 'dotenv'
 
 # Testing
-gem 'rspec'
-gem 'rack-test'
-
 group :test do
+  gem 'rspec'
+  gem 'rack-test'
   gem 'pdf-inspector', require: "pdf/inspector"
 end
-# Development tools
-gem 'dotenv'
