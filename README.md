@@ -118,6 +118,9 @@ docker build -t data-generator .
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_KEY>
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET>
+# You can override the default port (8088) by setting the PORT environment variable
+docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e PORT=3000 -p 3000:3000 data-generator
+# Or use the default port
 docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-generator
 ```
 
