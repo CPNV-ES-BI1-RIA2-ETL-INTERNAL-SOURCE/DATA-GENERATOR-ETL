@@ -7,6 +7,8 @@ require_relative '../../src/externalAPIs/search_ch'
 require_relative '../externalAPIs/mock_search_api'
 
 # TODO NGY - You don't need to test the "real" pdf extractor. Mock it.
+# ANSWER DRZ - The test is made to verify if the PDF it correctly formatted and if the parameters we provide
+# to the formatter are correctly displayed in the PDF. The PDF extractor is not tested here, it is used to
 RSpec.describe PDFFormatter do
   let(:api_client) { MockSearchAPI.new }
   let(:pdf_formatter) { PDFFormatter.new }
