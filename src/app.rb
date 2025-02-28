@@ -31,6 +31,7 @@ class App
 
   #TODO NGY - class diagram : singelton, where do you test if the server already exist ?
   # TODO NGY - port number hard coded... need to be changed.
+  # ANSWER DRZ - The port number is a default value in case the user does not provide a port number as an argument.
   def self.run(port: 8080)
     Server::start_server!(port: port)
   end

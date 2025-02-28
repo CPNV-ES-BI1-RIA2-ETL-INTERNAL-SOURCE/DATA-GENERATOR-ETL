@@ -41,6 +41,7 @@ class Server < Sinatra::Base
   end
 
   # TODO NGY - port number hard coded... need to be changed.
+  # ANSWER DRZ - The port number is a default value in case the user does not provide a port number as an argument.
   def self.start_server!(port: 8080)
     set :port, port
     set :bind, '0.0.0.0'
