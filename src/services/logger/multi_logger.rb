@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 require 'logger'
+require 'fileutils'
 
 class MultiLogger
 
-  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_file: './logs/logs.log')
+  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './tmp/logs', log_file: 'logs.log')
+    FileUtils.mkdir_p(log_directory) unless File.exist?(log_directory)
     @console_logger = Logger.new(STDOUT)
     @console_logger.level = console_level
 
-    @file_logger = Logger.new(log_file, 'daily')
+    @file_logger = Logger.new(File.join(log_directory, log_file), 'daily')
     @file_logger.level = file_level
   end
 
