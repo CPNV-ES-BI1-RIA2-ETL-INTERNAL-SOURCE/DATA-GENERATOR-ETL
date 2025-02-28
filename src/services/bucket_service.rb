@@ -6,6 +6,8 @@ class BucketService
   # TODO rethink the idea of having a private variable for the bucket name. 
   # This is highly restrictive when working with multiple buckets. What about a static class ?
   # TODO You haven't applied what we studied at the beginning of the module.
+  # ANSWER DRZ - In this no fix is needed in facts this component is going to be removed to be replaced by a sparated
+  # service that will handle the bucket operations.
   attr :client, :default_bucket
 
   def initialize(client, default_bucket)
