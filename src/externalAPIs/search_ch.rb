@@ -21,7 +21,4 @@ class SearchAPI < ExternalAPI
   end
 
   # TODO - either implement or remove it
-  def get_connections(from, to, date)
-    raise NotImplementedError, 'Method not implemented'
-  end
 end
