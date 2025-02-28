@@ -5,6 +5,7 @@ require_relative 'app'
 
 # TODO NGY - regarding the readme file, port number comes from argument command line (run server)
 # Is it a "default" value in "case of" ?
+# ANSWER DRZ - The port number is a default value in case the user does not provide a port number as an argument.
 port = 8088
 
 port = ARGV.to_hash['p'].to_i if ARGV.to_hash['p']
