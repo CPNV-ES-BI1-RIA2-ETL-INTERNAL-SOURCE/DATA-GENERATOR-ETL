@@ -7,6 +7,7 @@ WORKDIR /app
 COPY . .
 RUN bundle install
 
-EXPOSE 8088
+ENV PORT=8088
+EXPOSE ${PORT}
 
-CMD ["ruby", "./src/index.rb", "-p", "8088"]
+CMD ruby ./src/index.rb -p $PORT
