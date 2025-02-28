@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module DI
-
   class Container
     def initialize
       @dependencies = {}
@@ -19,5 +18,4 @@ module DI
       resolve(key)
     end
   end
-
 end

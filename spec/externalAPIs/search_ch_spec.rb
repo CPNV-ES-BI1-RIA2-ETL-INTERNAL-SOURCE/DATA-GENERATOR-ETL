@@ -12,17 +12,17 @@ describe SearchAPI do
   describe '#initialize' do
     it 'sets default options correctly' do
       expect(api_client.instance_variable_get(:@options)).to include(
-                                                               query: hash_including(
-                                                                 show_tracks: 1,
-                                                                 show_subsequent_stops: 1,
-                                                                 time: '00:01'
-                                                               )
-                                                             )
+        query: hash_including(
+          show_tracks: 1,
+          show_subsequent_stops: 1,
+          time: '00:01'
+        )
+      )
     end
   end
 
   describe '#stationboard' do
-    # TODO missing context description
+    # TODO: missing context description
     context 'when fetching station timetable information' do
       let(:station) { 'Yverdon-les-Bains' }
       let(:date) { '12/12/2024' }
@@ -40,7 +40,8 @@ describe SearchAPI do
       end
 
       it 'calls the API with correct endpoint and options' do
-        expect(SearchAPI).to receive(:get).with('/timetable/api/stationboard.json', hash_including(query: hash_including(stop: station, date: date)))
+        expect(SearchAPI).to receive(:get).with('/timetable/api/stationboard.json',
+                                                hash_including(query: hash_including(stop: station, date: date)))
         api_client.get_stationboard(station, date)
       end
 
@@ -52,7 +53,10 @@ describe SearchAPI do
 
   describe '#get_connections' do
     it 'raises NotImplementedError' do
-      expect { api_client.get_connections('Yverdon', 'Lausanne', '12/12/2024') }.to raise_error(NotImplementedError, 'Method not implemented')
+      expect do
+        api_client.get_connections('Yverdon', 'Lausanne',
+                                   '12/12/2024')
+      end.to raise_error(NotImplementedError, 'Method not implemented')
     end
   end
 end

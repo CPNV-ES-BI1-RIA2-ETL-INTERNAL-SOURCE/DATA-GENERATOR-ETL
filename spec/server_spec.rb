@@ -35,7 +35,7 @@ RSpec.describe Server, type: :request do
       end
 
       it 'returns a 404 status when the station or region is invalid' do
-        get "/api/v1/stationboards/invalid_region/invalid_station", {}, 'HTTP_ACCEPT' => valid_mimetype
+        get '/api/v1/stationboards/invalid_region/invalid_station', {}, 'HTTP_ACCEPT' => valid_mimetype
 
         expect(last_response.status).to eq(404)
       end

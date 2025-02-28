@@ -4,8 +4,8 @@ require 'logger'
 require 'fileutils'
 
 class MultiLogger
-
-  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './tmp/logs', log_file: 'logs.log')
+  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './tmp/logs',
+                 log_file: 'logs.log')
     FileUtils.mkdir_p(log_directory) unless File.exist?(log_directory)
     @console_logger = Logger.new(STDOUT)
     @console_logger.level = console_level
@@ -23,13 +23,11 @@ class MultiLogger
   end
 
   def log(severity, message)
-    if log_to_console?(severity)
-      @console_logger.add(severity) { message }
-    end
+    @console_logger.add(severity) { message } if log_to_console?(severity)
 
-    if log_to_file?(severity)
-      @file_logger.add(severity) { message }
-    end
+    return unless log_to_file?(severity)
+
+    @file_logger.add(severity) { message }
   end
 
   def debug(message)

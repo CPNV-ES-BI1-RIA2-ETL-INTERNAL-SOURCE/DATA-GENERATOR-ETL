@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'prawn'
 require 'prawn/table'
 require 'prawn/text/formatted'
@@ -7,7 +8,7 @@ require_relative '../../helpers/date'
 class Timetable
   include Prawn::View
 
-  attr :table_data
+  attr_reader :table_data
 
   def initialize
     super
@@ -22,7 +23,7 @@ class Timetable
     image path, at: [3100, 2320], width: 200
   end
 
-  def headers= (headers)
+  def headers=(headers)
     @table_data.unshift headers
   end
 
@@ -34,7 +35,7 @@ class Timetable
 
   def draw_heading(date)
     text "Gare de #{@stop.name}", size: 24, style: :bold
-    text "État au #{date.strftime('%d')} #{DateFormatters::get_month(date.strftime('%m'))} #{date.strftime('%Y')}"
+    text "État au #{date.strftime('%d')} #{DateFormatters.get_month(date.strftime('%m'))} #{date.strftime('%Y')}"
     move_down 20
   end
 
@@ -42,8 +43,5 @@ class Timetable
     save_as filename
   end
 
-  def stop=(stop)
-    @stop = stop
-  end
-
+  attr_writer :stop
 end

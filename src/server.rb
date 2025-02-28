@@ -11,7 +11,10 @@ require_relative 'app'
 class Server < Sinatra::Base
   get '/api/:v/stationboards/:region/:stop' do
     App.instance[:logger].info("#{request.env['REQUEST_METHOD']} #{request.env['REQUEST_URI']}")
-    halt 404, "Unsupported API Version: #{params['v']}" if params['v'][1..params['v'].length] != App.instance[:config]['api']['version']
+    if params['v'][1..params['v'].length] != App.instance[:config]['api']['version']
+      halt 404,
+           "Unsupported API Version: #{params['v']}"
+    end
     mimetype = request.env['HTTP_ACCEPT']
     stop = params['stop']
 
@@ -40,7 +43,7 @@ class Server < Sinatra::Base
     body 'Not found'
   end
 
-  # TODO NGY - port number hard coded... need to be changed.
+  # TODO: NGY - port number hard coded... need to be changed.
   # ANSWER DRZ - The port number is a default value in case the user does not provide a port number as an argument.
   def self.start_server!(port: 8080)
     set :port, port
@@ -80,6 +83,6 @@ class Server < Sinatra::Base
   end
 
   def process_request(request_processor, options)
-    request_processor.process({stop: options[:stop], date: options[:date]})
+    request_processor.process({ stop: options[:stop], date: options[:date] })
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'dry-struct'
 require 'dry-types'
 require 'dry-monads'

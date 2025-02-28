@@ -9,13 +9,12 @@ require_relative './formatters/xml_formatter'
 
 # Config class that holds the configuration of the server mainly the static data
 class Config
-
   attr_reader :region_api, :accepted_mimetypes, :formatters
 
   def initialize
     cf = File.open('config.yml').read
     ENV.each do |k, v|
-      cf.gsub! "${"+k+"}", v
+      cf.gsub! '${' + k + '}', v
     end
 
     @config = YAML.load(cf)

@@ -12,9 +12,9 @@ class XMLFormatter
 
   def json_to_xml(data, root_name = 'root')
     builder = Nokogiri::XML::Builder.new(encoding: 'UTF-8') do |xml|
-      xml.send(root_name) {
+      xml.send(root_name) do
         parse_json_object(data, xml)
-      }
+      end
     end
     builder.to_xml
   end
