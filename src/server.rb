@@ -40,7 +40,7 @@ class Server < Sinatra::Base
     body 'Not found'
   end
 
-
+  # TODO NGY - port number hard coded... need to be changed.
   def self.start_server!(port: 8080)
     set :port, port
     set :bind, '0.0.0.0'

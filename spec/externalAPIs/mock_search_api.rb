@@ -15,6 +15,7 @@ class MockSearchAPI
 
   private
 
+  # TODO - data must be separated from test logic.
   def mock_response(query_params)
     puts "Mocking response for query parameters: #{query_params.inspect}"
     {

@@ -3,6 +3,8 @@ require 'dotenv/load'
 require 'argv'
 require_relative 'app'
 
+# TODO NGY - regarding the readme file, port number comes from argument command line (run server)
+# Is it a "default" value in "case of" ?
 port = 8088
 
 port = ARGV.to_hash['p'].to_i if ARGV.to_hash['p']

@@ -6,6 +6,7 @@ require_relative '../../src/formatters/pdf_formatter'
 require_relative '../../src/externalAPIs/search_ch'
 require_relative '../externalAPIs/mock_search_api'
 
+# TODO NGY - You don't need to test the "real" pdf extractor. Mock it.
 RSpec.describe PDFFormatter do
   let(:api_client) { MockSearchAPI.new }
   let(:pdf_formatter) { PDFFormatter.new }
