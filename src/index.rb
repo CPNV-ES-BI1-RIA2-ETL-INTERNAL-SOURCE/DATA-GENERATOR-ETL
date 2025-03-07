@@ -10,11 +10,14 @@ require_relative 'app'
 port = 8088
 
 port = ARGV.to_hash['p'].to_i if ARGV.to_hash['p']
-ENV['APP_ENV'] = 'development' if ARGV.short_options.include?('d') || ARGV.long_options.any? do |i|
-  %w[dev development].include?(i)
+
+if !ENV.key?('APP_ENV') || ENV['APP_ENV'].nil?
+  ENV['APP_ENV'] = 'development' if ARGV.short_options.include?('d') || ARGV.long_options.any? do |i|
+    %w[dev development].include?(i)
+  end
+  ENV['APP_ENV'] = 'test' if ARGV.short_options.include?('t') || ARGV.long_options.include?('test')
+  ENV['APP_ENV'] = 'production' unless ENV.key?('APP_ENV')
 end
-ENV['APP_ENV'] = 'test' if ARGV.short_options.include?('t') || ARGV.long_options.include?('test')
-ENV['APP_ENV'] = 'production' unless ENV.key?('APP_ENV')
 
 App.instance
 App.run port: port
