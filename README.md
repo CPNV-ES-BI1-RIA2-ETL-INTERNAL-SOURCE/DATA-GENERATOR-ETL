@@ -131,9 +131,57 @@ bundle exec rubocop -a
 bundle exec rubocop --safe-auto-correct
 ```
 
-### On production environment
+## On production environment
 
-#### Docker
+### Deploy from source
+
+```bash
+# Clone the repository
+git clone https://github.com/CPNV-ES-BI1-RIA2-ETL-INTERNAL-SOURCE/DATA-GENERATOR-ETL.git
+cd DATA-GENERATOR-ETL
+```
+
+```bash
+# Install the dependencies
+bundle install --without development test
+```
+
+#### Run the server
+
+**index.rb** — Script pour démarrer le serveur Ruby
+
+**COMMAND**
+
+```bash
+ruby ./src/index.rb [OPTIONS]
+```
+
+The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
+
+**OPTIONS**
+
+**-p \<port>**
+:   Sets the port on which the application listens.  
+Default: `8000`  
+Example: `ruby ./src/index.rb -p 8080`
+
+**NOTES**
+
+If no option is specified, the application will run with default settings (typically production mode and the default port).
+
+You can also define the port using the `PORT` environment variable:
+
+```bash
+export PORT=8080
+ruby ./src/index.rb
+```
+
+or
+
+```dotenv
+# .env
+PORT=8080
+```
 
 ##### Build the image
 
@@ -147,7 +195,7 @@ docker build -t data-generator .
 export AWS_ACCESS_KEY_ID=<AWS_KEY>
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET>
 # You can override the default port (8000) by setting the PORT environment variable
-docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e PORT=3000 -p 3000:3000 data-generator
+docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e PORT=3000 -p 8000:3000 data-generator
 # Or use the default port
 docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8000:8000 data-generator
 ```
