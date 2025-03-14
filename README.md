@@ -62,7 +62,7 @@ The **index.rb** script launches a Ruby server with various configuration option
 
 **-p \<port>**
 :   Sets the port on which the application listens.  
-Default: `8080`  
+Default: `8000`  
 Example: `ruby ./src/index.rb -p 8080` 
 
 **-d**, **--dev**, **--development**
@@ -76,6 +76,19 @@ Example: `ruby ./src/index.rb -t`
 
 ##### NOTES
 If no option is specified, the application will run with default settings (typically production mode and the default port).
+
+You can also define the port using the `PORT` environment variable:
+
+```bash
+export PORT=8080
+ruby ./src/index.rb
+```
+
+or
+
+```dotenv
+PORT=8080
+```
 
 
 Test the API with the following command to retrieve the stationboard for Zurich on the 12th of December 2024 in PDF
@@ -133,10 +146,10 @@ docker build -t data-generator .
 ```bash
 export AWS_ACCESS_KEY_ID=<AWS_KEY>
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET>
-# You can override the default port (8088) by setting the PORT environment variable
+# You can override the default port (8000) by setting the PORT environment variable
 docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e PORT=3000 -p 3000:3000 data-generator
 # Or use the default port
-docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8088:8088 data-generator
+docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8000:8000 data-generator
 ```
 
 ## Directory structure
