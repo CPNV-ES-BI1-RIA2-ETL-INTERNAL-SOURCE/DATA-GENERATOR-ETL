@@ -7,9 +7,10 @@ require_relative 'app'
 # TODO: NGY - regarding the readme file, port number comes from argument command line (run server)
 # Is it a "default" value in "case of" ?
 # ANSWER DRZ - The port number is a default value in case the user does not provide a port number as an argument.
-port = 8088
 
-port = ARGV.to_hash['p'].to_i if ARGV.to_hash['p']
+# Default port from environment variable
+# Command line argument takes precedence over environment variable
+ENV['PORT'] = ARGV.to_hash['p'] if ARGV.to_hash['p']
 
 if !ENV.key?('APP_ENV') || ENV['APP_ENV'].nil?
   ENV['APP_ENV'] = 'development' if ARGV.short_options.include?('d') || ARGV.long_options.any? do |i|
@@ -20,4 +21,4 @@ if !ENV.key?('APP_ENV') || ENV['APP_ENV'].nil?
 end
 
 App.instance
-App.run port: port
+App.run
