@@ -1,0 +1,12 @@
+.git
+.gitignore
+/spec/reports/
+.env
+.env.*
+README.md
+docs/
+*.md
+.dockerignore
+Dockerfile
+LICENSE
+config.yml
