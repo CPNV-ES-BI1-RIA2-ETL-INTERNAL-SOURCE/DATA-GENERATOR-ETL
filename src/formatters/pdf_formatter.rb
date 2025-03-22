@@ -28,14 +28,14 @@ class PDFFormatter
 
     date = DateTime.parse(data.connections[0].time)
     tt = create_timetable(data, date)
-    
+
     @logger.debug("Starting PDF generation for #{request[:stop]}")
     content = tt.render
     @logger.debug("PDF generation for #{request[:stop]} finished")
-    
+
     filename = filenamer(date, request)
-    @bucket_service.upload(content, filename, @bucket_service.default_bucket)
-    create_response(filename)
+
+    create_response(@bucket_service.upload(content, filename).url)
   end
 
   def create_timetable(data, date)
@@ -68,8 +68,7 @@ class PDFFormatter
     "#{date.strftime('%Y-%m-%d')}/#{request[:stop]}.pdf"
   end
 
-  def create_response(filename)
-    { 'status' => 'created', 'file' => @bucket_service.get_presigned_url(filename),
-      'validity_duration' => @config['storage']['signed_url_expiration_time'] }.to_json
+  def create_response(url)
+    { 'status' => 'created', 'file' => url }.to_json
   end
 end
