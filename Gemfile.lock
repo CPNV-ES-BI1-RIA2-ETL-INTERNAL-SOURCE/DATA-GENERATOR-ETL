@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/drutz-cpnv/ria-bucket-sdk.git
-  revision: a7426969bb0f32a64035beaec0dcc6cd08198291
+  revision: 0a6a1db1688c604d89151aae5499a63d6b6ef03c
   specs:
-    bucket-sdk (0.1.0)
+    bucket_sdk (0.1.0)
       faraday (~> 2.7)
       faraday-multipart (~> 1.0)
       zeitwerk (~> 2.6)
@@ -83,10 +83,10 @@ GEM
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     ice_nine (0.11.2)
-    json (2.10.1)
+    json (2.10.2)
     language_server-protocol (3.17.0.4)
     lint_roller (1.1.0)
-    logger (1.6.5)
+    logger (1.6.6)
     matrix (0.4.2)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
@@ -187,7 +187,7 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uri (1.0.3)
-    zeitwerk (2.7.1)
+    zeitwerk (2.7.2)
 
 PLATFORMS
   arm64-darwin-24
@@ -196,7 +196,7 @@ PLATFORMS
 
 DEPENDENCIES
   argv
-  bucket-sdk!
+  bucket_sdk!
   dotenv
   dry-auto_inject
   dry-container
