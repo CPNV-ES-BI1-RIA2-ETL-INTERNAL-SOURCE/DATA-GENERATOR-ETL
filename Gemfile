@@ -7,7 +7,7 @@ ruby '~> 3.0'
 
 # Core dependencies
 gem 'argv'
-gem 'aws-sdk-s3'
+gem 'bucket-sdk', git: 'https://github.com/drutz-cpnv/ria-bucket-sdk.git'
 gem 'dotenv'
 gem 'dry-monads'
 gem 'dry-struct'
@@ -29,7 +29,7 @@ end
 
 # Testing dependencies
 group :test do
-  gem 'rspec'
-  gem 'rack-test'
   gem 'pdf-inspector', require: 'pdf/inspector'
+  gem 'rack-test'
+  gem 'rspec'
 end
