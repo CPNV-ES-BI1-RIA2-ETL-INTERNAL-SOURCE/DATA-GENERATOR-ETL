@@ -20,9 +20,4 @@ formatters:
 
 storage:
   type: 's3'
-  provider: 'aws'
-  bucket: 'my-bucket'
-  region: 'eu-south-1'
-  signed_url_expiration_time: 3600
-  access_key: ${AWS_ACCESS_KEY_ID}
-  secret_key: ${AWS_SECRET_ACCESS_KEY}
+  url: 'http://localhost:8000'
