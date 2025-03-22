@@ -3,6 +3,7 @@
 * [Description](#description)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
+  * [External Dependencies](#external-dependencies)
 * [Deployment](#deployment)
   * [On dev environment](#on-dev-environment)
     * [Clone the repository](#clone-the-repository)
@@ -37,6 +38,14 @@ More details can be found in the [project wiki](https://github.com/CPNV-ES-BI1-S
     * or use Rbenv 1.3.2 [official doc](https://github.com/rbenv/rbenv#readme)
 * Git version 2.47.1 or later [official doc](https://git-scm.com/)
 * Bundler 2.5.21 or later (already installed with ruby) [official doc](https://bundler.io/)
+
+## External Dependencies
+
+This service requires access to an external bucket service to function properly. This dependency is **mandatory** for the service to work correctly.
+
+* Bucket Service: [CPNV-ES-BI1-RIA2-ETL-INTERNAL-SOURCE/BUCKET](https://github.com/CPNV-ES-BI1-RIA2-ETL-INTERNAL-SOURCE/BUCKET)
+
+Please ensure you have access to this external service before deploying or running this application.
 
 # Deployment
 
