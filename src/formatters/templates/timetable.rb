@@ -5,6 +5,7 @@ require 'prawn/table'
 require 'prawn/text/formatted'
 require_relative '../../helpers/date'
 
+# Timetable class for generating timetable templates
 class Timetable
   include Prawn::View
 
