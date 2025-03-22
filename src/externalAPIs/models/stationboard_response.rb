@@ -3,10 +3,10 @@
 require 'dry-struct'
 require 'dry-types'
 require 'dry-monads'
-require 'httparty'
 
 Dry::Types.load_extensions(:maybe)
 
+# Types module providing data structures for stationboard responses
 module Types
   include Dry.Types
 end

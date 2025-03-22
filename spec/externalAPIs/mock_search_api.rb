@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../src/externalAPIs/models/stationboard_response'
 require_relative '../data/search_api_response'
 

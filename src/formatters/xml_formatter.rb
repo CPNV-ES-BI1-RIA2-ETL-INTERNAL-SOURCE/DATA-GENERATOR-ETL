@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 require 'json'
 require 'nokogiri'
 
+# XMLFormatter class for converting data to XML format
 class XMLFormatter
   def format(data)
     json = data[:response].parsed_response.to_json
@@ -22,15 +25,23 @@ class XMLFormatter
   def parse_json_object(data, xml)
     case data
     when Hash
-      data.each do |key, value|
-        xml.send(key.to_s.gsub('*', '_')) { parse_json_object(value, xml) }
-      end
+      process_hash(data, xml)
     when Array
-      data.each do |item|
-        xml.send('item') { parse_json_object(item, xml) }
-      end
+      process_array(data, xml)
     else
       xml.text(data)
+    end
+  end
+
+  def process_hash(hash, xml)
+    hash.each do |key, value|
+      xml.send(key.to_s.gsub('*', '_')) { parse_json_object(value, xml) }
+    end
+  end
+
+  def process_array(array, xml)
+    array.each do |item|
+      xml.send('item') { parse_json_object(item, xml) }
     end
   end
 end

@@ -3,15 +3,19 @@
 require 'logger'
 require 'fileutils'
 
+# MultiLogger class that supports logging to multiple outputs simultaneously
 class MultiLogger
   def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './tmp/logs',
                  log_file: 'logs.log')
     FileUtils.mkdir_p(log_directory) unless File.exist?(log_directory)
-    @console_logger = Logger.new(STDOUT)
+    @console_logger = Logger.new($stdout)
     @console_logger.level = console_level
 
     @file_logger = Logger.new(File.join(log_directory, log_file), 'daily')
     @file_logger.level = file_level
+
+    @console_logger.formatter = formatter
+    @file_logger.formatter = formatter
   end
 
   def log_to_console?(severity)
@@ -48,5 +52,14 @@ class MultiLogger
 
   def fatal(message)
     log(Logger::FATAL, message)
+  end
+
+  private
+
+  def formatter
+    proc do |severity, datetime, _, msg|
+      date_format = datetime.strftime('%Y-%m-%d %H:%M:%S')
+      "[#{date_format}] #{severity}: #{msg}\n"
+    end
   end
 end

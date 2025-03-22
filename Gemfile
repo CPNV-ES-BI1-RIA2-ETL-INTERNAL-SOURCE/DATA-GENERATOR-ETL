@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: NGY https://bundler.io/guides/using_bundler_in_applications.html#installing-gems---bundle-install
 
 source 'https://rubygems.org'
@@ -9,6 +11,8 @@ ruby '~> 3.0'
 gem 'argv'
 gem 'bucket-sdk', git: 'https://github.com/drutz-cpnv/ria-bucket-sdk.git'
 gem 'dotenv'
+gem 'dry-auto_inject'
+gem 'dry-container'
 gem 'dry-monads'
 gem 'dry-struct'
 gem 'dry-validation'

@@ -5,13 +5,16 @@ require 'puma'
 require 'date'
 require_relative './services/request_processor'
 require_relative './config'
-require_relative 'app'
+require_relative 'container'
 
 # Server class that handles the API requests
 class Server < Sinatra::Base
+  # Auto-inject dependencies from the container
+  include Import[:logger, :config]
+
   get '/api/:v/stationboards/:region/:stop' do
-    App.instance[:logger].info("#{request.env['REQUEST_METHOD']} #{request.env['REQUEST_URI']}")
-    if params['v'][1..params['v'].length] != App.instance[:config]['api']['version']
+    logger.info("#{request.env['REQUEST_METHOD']} #{request.env['REQUEST_URI']}")
+    if params['v'][1..params['v'].length] != config['api']['version']
       halt 404,
            "Unsupported API Version: #{params['v']}"
     end
@@ -55,25 +58,27 @@ class Server < Sinatra::Base
   private
 
   def construct_request_processor(country:, method:, mimetype: 'application/json')
-    formatter_class = App.instance[:config].formatters[mimetype]
+    formatter = get_formatter(mimetype)
+    external_api = get_external_api(country, method)
+    
+    # Pass logger as a named parameter to ensure it gets properly injected
+    RequestProcessor.new(formatter, external_api)
+  end
 
+  def get_formatter(mimetype)
+    formatter_class = config.formatters[mimetype]
     halt 415, "Unsupported Media Type: #{mimetype}" if formatter_class.nil?
+    formatter_class.new
+  end
 
-    formatter = formatter_class.new
-
-    region_apis = App.instance[:config].region_api[country]
+  def get_external_api(country, method)
+    region_apis = config.region_api[country]
     halt 404, 'No Data Found for this request' if region_apis.nil? || region_apis.empty?
 
-    accepted_apis = []
-    region_apis.each do |api|
-      accepted_apis << api if valid_api?(api: api, method: method)
-    end
-
+    accepted_apis = region_apis.select { |api| valid_api?(api: api, method: method) }
     halt 404, 'No Data Found for this request' if accepted_apis.empty?
 
-    external_api = accepted_apis.first.new
-
-    RequestProcessor.new(formatter, external_api)
+    accepted_apis.first.new
   end
 
   def valid_api?(api:, method:)
