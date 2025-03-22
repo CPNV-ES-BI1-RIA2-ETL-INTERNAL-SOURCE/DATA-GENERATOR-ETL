@@ -202,12 +202,10 @@ docker build -t data-generator .
 #### Run the container
 
 ```bash
-export AWS_ACCESS_KEY_ID=<AWS_KEY>
-export AWS_SECRET_ACCESS_KEY=<AWS_SECRET>
 # You can override the default port (8000) by setting the PORT environment variable
-docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e PORT=3000 -p 8000:3000 data-generator
+docker run -e PORT=3000 -p 8000:3000 data-generator
 # Or use the default port
-docker run -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -p 8000:8000 data-generator
+docker run -p 8000:8000 data-generator
 ```
 
 # Directory structure
