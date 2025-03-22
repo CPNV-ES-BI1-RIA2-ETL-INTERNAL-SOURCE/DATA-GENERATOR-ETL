@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: NGY https://bundler.io/guides/using_bundler_in_applications.html#installing-gems---bundle-install
 
 source 'https://rubygems.org'
@@ -9,6 +11,8 @@ ruby '~> 3.0'
 gem 'argv'
 gem 'aws-sdk-s3'
 gem 'dotenv'
+gem 'dry-auto_inject'
+gem 'dry-container'
 gem 'dry-monads'
 gem 'dry-struct'
 gem 'dry-validation'
@@ -29,7 +33,7 @@ end
 
 # Testing dependencies
 group :test do
-  gem 'rspec'
-  gem 'rack-test'
   gem 'pdf-inspector', require: 'pdf/inspector'
+  gem 'rack-test'
+  gem 'rspec'
 end
