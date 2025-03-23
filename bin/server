@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'dotenv/load'
+require 'argv'
+
+# Parse command line arguments
+ENV['PORT'] = ARGV.to_hash['p'] if ARGV.to_hash['p']
+
+# Set environment from command line arguments
+if !ENV.key?('RACK_ENV') || ENV['RACK_ENV'].nil?
+  ENV['RACK_ENV'] = 'development' if ARGV.short_options.include?('d') || 
+                                   ARGV.long_options.any? { |i| %w[dev development].include?(i) }
+  ENV['RACK_ENV'] = 'test' if ARGV.short_options.include?('t') || 
+                             ARGV.long_options.include?('test')
+  ENV['RACK_ENV'] = 'production' unless ENV.key?('RACK_ENV')
+end
+
+# Load the application
+require_relative '../app'
+
+# Start the server
+App.run!
