@@ -14,7 +14,7 @@ module StationboardController
   # @option options [String] :date The date (optional)
   # @option options [String] :mode The mode (departures/arrivals)
   # @option options [String] :method The method to call on the external API
-  # @return [String] The formatted stationboard data
+  # @return [Hash] The formatted stationboard data and content type
   def get_stationboard(options)
     # Get the formatter for the requested mimetype
     formatter = get_formatter(options[:mimetype])
@@ -26,7 +26,7 @@ module StationboardController
     request_processor = Container['request_processor'].call(formatter, external_api)
     
     # Process the request
-    request_processor.process(
+    content = request_processor.process(
       {
         stop: options[:stop],
         date: options[:date],
@@ -34,20 +34,41 @@ module StationboardController
       },
       options[:method]
     )
+    
+    # Get the response content type for the mimetype
+    response_content_type = get_response_type(options[:mimetype])
+    
+    # Return both content and content_type
+    {
+      content: content,
+      content_type: response_content_type
+    }
   end
   
   private
-  
+
   # Get formatter for the requested mimetype
   #
   # @param [String] mimetype The mimetype
   # @return [Object] The formatter instance
   def get_formatter(mimetype)
     config = Container[:config]
-    formatter_class = config.formatters[mimetype]
+    formatter_class = config.formatters[mimetype][:class]
     halt 415, { error: "Unsupported Media Type: #{mimetype}", status: 415 }.to_json if formatter_class.nil?
-    
+
     formatter_class.new
+  end
+
+  # Get response format for the requested mimetype
+  #
+  # @param [String] mimetype The mimetype
+  # @return [String] The response content type
+  def get_response_type(mimetype)
+    config = Container[:config]
+    format = config.formatters[mimetype][:response]['type']
+    halt 415, { error: "Unsupported Media Type: #{mimetype}", status: 415 }.to_json if format.nil?
+
+    format
   end
   
   # Get external API for the requested region

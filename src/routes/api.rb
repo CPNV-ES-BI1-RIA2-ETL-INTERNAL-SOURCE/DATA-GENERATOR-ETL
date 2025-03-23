@@ -44,7 +44,7 @@ module Routes
       external_api_method = "#{request.env['REQUEST_METHOD'].downcase}_stationboard"
       
       # Process the request using the stationboard controller
-      result = get_stationboard(
+      response = get_stationboard(
         mimetype: mimetype,
         region: region,
         stop: stop,
@@ -53,9 +53,9 @@ module Routes
         method: external_api_method
       )
       
-      # Set content type and return data
-      content_type mimetype
-      result
+      # Set content type from the controller response and return data
+      content_type response[:content_type]
+      response[:content]
     end
   end
 end 
