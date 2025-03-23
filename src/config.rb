@@ -12,7 +12,7 @@ require_relative './formatters/xml_formatter'
 class Config
   ConfigError = Class.new(StandardError)
   
-  attr_reader :region_api, :accepted_mimetypes, :formatters, :config_data
+  attr_reader :region_api, :accepted_mimetypes, :formatters, :formatter_config, :config_data
 
   # Initialize the config with a specific config file
   # @param config_file [String] Path to the config file
@@ -59,6 +59,10 @@ class Config
       required(:formatters).array(:hash) do
         required(:type).filled(:string)
         required(:class).filled(:string)
+        required(:response).hash do
+          required(:type).filled(:string)
+          required(:service).filled(:string)
+        end
       end
       
       required(:storage).hash do
@@ -83,7 +87,7 @@ class Config
     @formatters = {}
     @config_data['formatters'].each do |formatter|
       begin
-        @formatters[formatter['type']] = Object.const_get(formatter['class'])
+        @formatters[formatter['type']] = { class: Object.const_get(formatter['class']), response: formatter['response'] }
       rescue NameError => e
         raise ConfigError, "Invalid formatter class: #{formatter['class']}"
       end
