@@ -79,16 +79,16 @@ The **index.rb** script launches a Ruby server with various configuration option
 **-p \<port>**
 :   Sets the port on which the application listens.  
 Default: `8000`  
-Example: `ruby ./src/index.rb -p 8080` 
+Example: `ruby bin/server -p 8080` 
 
 **-d**, **--dev**, **--development**
 :   Starts the server in development mode.  
 Default: **`production`**  
-Example: `ruby ./src/index.rb --dev`
+Example: `ruby bin/server --dev`
 
 **-t**, **--test**
 :   Starts the server in test mode.  
-Example: `ruby ./src/index.rb -t`
+Example: `ruby bin/server -t`
 
 #### NOTES
 If no option is specified, the application will run with default settings (typically production mode and the default port).
@@ -179,7 +179,7 @@ The **index.rb** script launches a Ruby server with various configuration option
 **-p \<port>**
 :   Sets the port on which the application listens.  
 Default: `8000`  
-Example: `ruby ./src/index.rb -p 8080`
+Example: `ruby bin/server -p 8080`
 
 **NOTES**
 
@@ -188,7 +188,7 @@ If no option is specified, the application will run with default settings (typic
 You can also define the port using the `PORT` environment variable:
 
 ```bash
-PORT=8080 ruby ./src/index.rb
+PORT=8080 ruby bin/server
 ```
 
 or
