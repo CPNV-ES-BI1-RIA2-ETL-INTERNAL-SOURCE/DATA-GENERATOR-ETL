@@ -9,7 +9,7 @@ ruby '~> 3.0'
 
 # Core dependencies
 gem 'argv'
-gem 'aws-sdk-s3'
+gem 'bucket_sdk'
 gem 'dotenv'
 gem 'dry-auto_inject'
 gem 'dry-container'
