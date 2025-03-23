@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
-require_relative 'templates/timetable'
 require_relative '../helpers/date'
 require_relative '../container'
+require_relative 'pdf/timetable_formatter'
+require_relative 'pdf/file_manager'
+require_relative 'pdf/response_builder'
 
 # PDFFormatter class for converting data to PDF format
 class PDFFormatter
@@ -14,10 +16,13 @@ class PDFFormatter
     @origin_data_structure = origin_data_structure
     @destination_data_structure = {}
 
-    # Explicitly set the dependencies to instance variables
     @logger = deps[:logger]
     @bucket_service = deps[:bucket_service]
     @config = deps[:config]
+
+    @timetable_formatter = PDF::TimetableFormatter.new
+    @file_manager = PDF::FileManager.new
+    @response_builder = PDF::ResponseBuilder.new
   end
 
   # @param data [StationBoardResponse]
@@ -27,48 +32,15 @@ class PDFFormatter
     return unless data.instance_of?(StationBoardResponse)
 
     date = DateTime.parse(data.connections[0].time)
-    tt = create_timetable(data, date)
 
     @logger.debug("Starting PDF generation for #{request[:stop]}")
+    tt = @timetable_formatter.create_timetable(data, date)
     content = tt.render
     @logger.debug("PDF generation for #{request[:stop]} finished")
 
-    filename = filenamer(date, request)
+    filename = @file_manager.generate_filename(date, request)
+    upload_url = @bucket_service.upload(content, filename).url
 
-    create_response(@bucket_service.upload(content, filename).url)
-  end
-
-  def create_timetable(data, date)
-    tt = Timetable.new
-    tt.draw_logo File.expand_path('../../assets/images/sbb-logo.png', __dir__)
-    tt.headers = ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
-    tt.stop = data.stop
-    tt.draw_heading(date)
-    tt.draw_table({ column_widths: [110, 50, 150, 2940, 50] }) do
-      format_connections_data(data.connections)
-    end
-    tt
-  end
-
-  def format_connections_data(connections)
-    connections.map do |connection|
-      track = ''
-      track = connection.track.value! if connection.track.class != Dry::Monads::Maybe::None
-      [
-        DateTime.parse(connection.time).strftime('%k %M'),
-        connection.line,
-        connection.terminal.name,
-        connection.subsequent_stops.map(&:name).join(', ').to_s,
-        track
-      ]
-    end
-  end
-
-  def filenamer(date, request)
-    "#{date.strftime('%Y-%m-%d')}/#{request[:stop]}.pdf"
-  end
-
-  def create_response(url)
-    { 'status' => 'created', 'file' => url }.to_json
+    @response_builder.create_response(upload_url)
   end
 end
