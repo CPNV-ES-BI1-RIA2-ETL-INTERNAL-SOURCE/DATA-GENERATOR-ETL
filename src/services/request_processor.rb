@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require_relative '../container'
-require_relative '../app'
 
 # RequestProcessor class for handling API requests and formatting responses
 class RequestProcessor

@@ -5,7 +5,7 @@ require 'fileutils'
 
 # MultiLogger class that supports logging to multiple outputs simultaneously
 class MultiLogger
-  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './tmp/logs',
+  def initialize(console_level: Logger::DEBUG, file_level: Logger::INFO, log_directory: './logs',
                  log_file: 'logs.log')
     FileUtils.mkdir_p(log_directory) unless File.exist?(log_directory)
     @console_logger = Logger.new($stdout)
