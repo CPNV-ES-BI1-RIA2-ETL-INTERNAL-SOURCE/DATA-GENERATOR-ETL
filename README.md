@@ -69,7 +69,7 @@ bundle install
 #### COMMAND
 
 ```bash
-ruby ./src/index.rb [OPTIONS]
+ruby bin/server [OPTIONS]
 ```
 
 The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
@@ -96,8 +96,7 @@ If no option is specified, the application will run with default settings (typic
 You can also define the port using the `PORT` environment variable:
 
 ```bash
-export PORT=8080
-ruby ./src/index.rb
+PORT=8080 ruby bin/server
 ```
 
 or
@@ -170,7 +169,7 @@ bundle install --without development test
 **COMMAND**
 
 ```bash
-ruby ./src/index.rb [OPTIONS]
+ruby bin/server [OPTIONS]
 ```
 
 The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
@@ -189,8 +188,7 @@ If no option is specified, the application will run with default settings (typic
 You can also define the port using the `PORT` environment variable:
 
 ```bash
-export PORT=8080
-ruby ./src/index.rb
+PORT=8080 ruby ./src/index.rb
 ```
 
 or
@@ -217,28 +215,59 @@ docker run -e PORT=3000 -p 8000:3000 data-generator
 docker run -p 8000:8000 data-generator
 ```
 
-# Directory structure
+# Project Architecture
 
-```shell
-├── config.yaml
-├── Gemfile                       # Dependencies
-├── Gemfile.lock                  
-├── Dockerfile                    # Docker image configuration                  
-├── README.md                     
-├── assets                        # Images or other assets
-│   └── images
-├── docs                          # Documentation
-├── logs                          # Log's file directory (not versioned)
-├── spec                          # Tests
-└── src                           # Source code 
-    ├── config.rb
-    ├── externalAPIs              # External APIs
-    ├── formatters                # Formatters
-    ├── helpers
-    ├── index.rb                  # Entrypoint    
-    ├── server.rb
-    └── services                  # Services
+This project follows a modular Sinatra architecture with a clean separation of concerns:
+
+## Directory Structure
+
 ```
+.
+├── app.rb                      # Main application file
+├── config/                     # Configuration files
+│   ├── config.yml              # Application configuration
+├── bin/                        # Executable scripts
+│   ├── console                 # Console script
+│   └── server                  # Server script
+├── src/                        # Source code
+│   ├── controllers/            # Controllers for handling business logic
+│   ├── middleware/             # Sinatra middleware
+│   ├── models/                 # Domain models using dry-struct
+│   ├── routes/                 # Route definitions
+│   ├── services/               # Service layer
+│   ├── formatters/             # Response formatters
+│   ├── externalAPIs/           # External API clients
+│   ├── helpers/                # Helper modules
+│   ├── config.rb               # Configuration management
+│   └── container.rb            # Dependency injection container
+├── spec/                       # Tests
+├── docs/                       # Documentation
+├── .env.example                # Example environment variables
+├── Gemfile                     # Ruby dependencies
+└── Dockerfile                  # Docker configuration
+```
+
+## Key Components
+
+1. **Controllers**: Handle the business logic for different endpoints
+2. **Routes**: Define API endpoints and delegate to controllers
+3. **Models**: Domain objects using dry-struct for type validation
+4. **Services**: Encapsulate complex business operations
+5. **Formatters**: Transform data into various formats (JSON, XML, PDF)
+6. **ExternalAPIs**: Interface with third-party services
+7. **Middleware**: Cross-cutting concerns like logging and error handling
+8. **Container**: Dependency injection using dry-container and dry-auto_inject
+
+## Request Flow
+
+1. Request comes in through the Sinatra server
+2. Middleware processes the request (logging, error handling)
+3. Router matches the request to a route
+4. Controller handles the business logic
+5. Services perform operations and interact with external systems
+6. Response is formatted and returned
+
+This architecture provides a clean, maintainable, and testable codebase while following Ruby and Sinatra best practices.
 
 # Collaborate
 
