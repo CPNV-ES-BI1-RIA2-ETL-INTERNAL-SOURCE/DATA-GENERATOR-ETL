@@ -9,7 +9,7 @@ ruby '~> 3.0'
 
 # Core dependencies
 gem 'argv'
-gem 'bucket_sdk', git: 'https://github.com/drutz-cpnv/ria-bucket-sdk.git'
+gem 'bucket_sdk'
 gem 'dotenv'
 gem 'dry-auto_inject'
 gem 'dry-container'
