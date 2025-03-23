@@ -42,7 +42,6 @@ COPY --from=pre-runtime /app/app.rb ./app.rb
 COPY --from=pre-runtime /app/config ./config
 COPY --from=pre-runtime /app/bin ./bin
 COPY --from=pre-runtime /app/src ./src
-COPY --from=pre-runtime /app/public ./public
 COPY --from=pre-runtime /app/assets ./assets
 
 # Make scripts executable
