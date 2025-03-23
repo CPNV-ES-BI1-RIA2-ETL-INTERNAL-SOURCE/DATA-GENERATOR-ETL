@@ -58,3 +58,7 @@ build-iPhoneSimulator/
 # IDE setting directory
 .idea/
 .vscode/
+
+# Ignore logs directory
+/logs/
+*.log

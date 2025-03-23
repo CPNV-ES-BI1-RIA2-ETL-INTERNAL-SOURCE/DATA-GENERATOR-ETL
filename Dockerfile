@@ -37,10 +37,23 @@ FROM pre-runtime AS runtime
 
 WORKDIR /app
 
+# Copy application files
+COPY --from=pre-runtime /app/app.rb ./app.rb
+COPY --from=pre-runtime /app/config ./config
+COPY --from=pre-runtime /app/bin ./bin
 COPY --from=pre-runtime /app/src ./src
+COPY --from=pre-runtime /app/public ./public
 COPY --from=pre-runtime /app/assets ./assets
 
-ENV PORT=8088
+# Make scripts executable
+RUN chmod +x ./bin/server
+RUN chmod +x ./bin/console
+
+# Create and set permissions for logs directory
+RUN mkdir -p logs && chmod -R 755 logs
+
+ENV PORT=8000
+ENV RACK_ENV=production
 EXPOSE ${PORT}
 
-ENTRYPOINT ["ruby", "./src/index.rb", "-p", "$PORT"]
+ENTRYPOINT ["ruby", "./bin/server"]

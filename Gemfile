@@ -23,12 +23,17 @@ gem 'ox'
 gem 'prawn'
 gem 'prawn-table'
 gem 'puma'
+gem 'rack'
+gem 'rack-contrib'
+gem 'rake'
 gem 'rackup'
 gem 'sinatra'
 
 # Development dependencies
 group :development do
   gem 'rubocop'
+  gem 'yard'
+  gem 'solargraph'
 end
 
 # Testing dependencies
@@ -36,4 +41,5 @@ group :test do
   gem 'pdf-inspector', require: 'pdf/inspector'
   gem 'rack-test'
   gem 'rspec'
+  gem 'simplecov', require: false
 end
