@@ -1,125 +1,174 @@
 @startuml Data Generator
 skinparam classAttributeIconSize 0
 
-class Server{
-+ run(): void
-- construct_request_processor(): void
-- processRequest(): void
-- valid_api?(api: ExternalAPI, method: String): boolean
+class Server {
+  + {static} startServer!() : void
+  - constructRequestProcessor(country : String, method : String, mimetype : String) : RequestProcessor
+  - getFormatter(mimetype : String) : Formatter
+  - getExternalApi(country : String, method : String) : ExternalAPI
+  - validApi(api : Class, method : String) : boolean
+  - processRequest(requestProcessor : RequestProcessor, options : Hash) : String
 }
 
-class App << (S,#FF7700) Singleton >> {
-    + config: Config
-    + bucket_service: BucketService
-    + App()
-    {static}+ run(port: Integer): Server
-    + interface(): App
+Server --|> Sinatra::Base
+
+class App {
+  + {static} run() : void
+  - setupContainer() : void
+  - registerBasicComponents() : void
+  - registerServices() : void
 }
 
-class RequestProcessor{
-    + initialize(): RequestProcessor
-    + Process(): String
+class Container extends Dry {
+  + {static} register(key : Symbol, options : Hash) : void
 }
 
-class ExternalAPI{
-    + initialize(options: Map): ExternalAPI
+class RequestProcessor {
+  - formatter : Formatter
+  - externalApi : ExternalAPI
+  - logger : MultiLogger
+  + initialize(formatter : Formatter, externalApi : ExternalAPI, **deps) : void
+  + process(options : Hash, method : String) : String
 }
 
-class SearchCH{
-    + getStationboard(options: Map)): String
-    + getConnections(option: Map): String
+abstract class ExternalAPI {
+  - options : Hash
+  + initialize() : void
 }
 
-interface formatter{
-    - DestinationDataStructure: Map
-    - originDataStructure: Map
-    + initialize(originDataStructure: Map = {}): formatter
-    + format(data: Map): String
+class SearchCH {
+  + getStationboard(options : Hash) : HTTParty::Response
+  + getConnections(options : Hash) : HTTParty::Response
 }
 
-class DeutschebahnCOM {
+class JSONFormatter {
+  - destinationDataStructure : Hash
+  - originDataStructure : Hash
+  + format(data : Hash) : String
 }
 
-class SheneoIO {
+class XMLFormatter {
+  + format(data : Hash) : String
+  - jsonToXml(data : Hash, rootName : String) : String
+  - parseJsonObject(data : Object, xml : Nokogiri::XML::Builder) : void
+  - processHash(hash : Hash, xml : Nokogiri::XML::Builder) : void
+  - processArray(array : Array, xml : Nokogiri::XML::Builder) : void
 }
 
-class SncfCOM{
-}
-
-class JSONformatter{
-}
-
-class PDFformatter{
-    + format(data: Map): String
-    - filenamer(date: DateTime, request: Map): String
-    - create_response(filename): String
+class PDFFormatter {
+  - logger : MultiLogger
+  - bucketService : Services::BucketAdapter
+  - config : Config
+  - destinationDataStructure : Hash
+  - originDataStructure : Hash
+  + initialize(originDataStructure : Hash = {}, **deps) : void
+  + format(data : Hash) : String
+  - createTimetable(data : StationBoardResponse, date : DateTime) : Timetable
+  - formatConnectionsData(connections : Array) : Array
+  - filenamer(date : DateTime, request : Hash) : String
+  - createResponse(url : String) : String
 }
 
 class Timetable {
-  - table_data: Array
-  + initialize(): void
-  + document(): Prawn::Document
-  + draw_logo(path: String): void
-  + headers=(headers: Array): void
-  + draw_table(options: Map): void
-  + draw_heading(date: DateTime): void
-  + save(filename: String): void
-  + stop=(stop: Map): void
+  - tableData : Array
+  - stop : Object
+  + initialize() : void
+  + document() : Prawn::Document
+  + drawLogo(path : String) : void
+  + <set>headers(headers : Array) : void
+  + drawTable(options : Hash) : void
+  + drawHeading(date : DateTime) : void
+  + save(filename : String) : void
+  + <set>stop(stop : Object) : void
 }
 
-
-class Dotenv{
+class Config {
+  - regionApi : Hash
+  - acceptedMimetypes : Array
+  - formatters : Hash
+  - configData : Hash
+  + initialize(configFile : String = "config.yml") : void
+  + [](key : String) : Object
+  - loadConfig(configFile : String) : void
+  - setupApiMapping() : void
+  - setupFormatters() : void
 }
 
-class Config{
-    'available regions will have one or more API classes associated with it
-    + regionAPI: Map
-    + formatter: Map
-    + config: Map
-    + load(): void
-    + get(key: String): String|Map
+class BucketAdapter {
+  - client : BucketSdk
+  - logger : MultiLogger
+  + initialize(baseUrl : String, **deps) : void
+  + upload(content : String, filename : String) : Hash
 }
 
-class BucketService {
-    + default_bucket: String
-    + client: AWS::S3::S3Client
-    + BucketService(client: AWS::S3::S3Client, default_bucket: String)
-    + upload(content: String, filename: String, bucket_name: String): AWS::S3::Types::PutObjectOutput
-    + get_presigned_url(object_key: String): String
+class MultiLogger {
+  + info(message : String) : void
+  + debug(message : String) : void
+  + error(message : String) : void
+  + warn(message : String) : void
 }
 
-RequestProcessor -right-> formatter
-formatter <|.. JSONformatter
-formatter <|.. PDFformatter
+package Dry {
+  package Container <<frame>> {
+  }
+  package AutoInject <<frame>> {
+  }
+}
 
-PDFformatter -right-> Timetable
+package Sinatra {
+  class Base
+}
 
-ExternalAPI .left.|> HTTParty
-SearchCH .up.|> ExternalAPI
-DeutschebahnCOM .up.|> ExternalAPI
-SheneoIO .up.|> ExternalAPI
-SncfCOM .up.|> ExternalAPI
+package HTTParty {
+}
 
-Server -up-> RequestProcessor
-RequestProcessor -left-> ExternalAPI
+App ..> Server : creates >
+Container <.. App : uses
 
-App .right.> Server
-App -right-> Config
-BucketService -right-> AWS::S3
+Import --> Container : uses
 
-'Dotenv file not a class
-ExternalAPI -left-> Dotenv
+Server --> "1" RequestProcessor : creates >
 
-'Main will be just a file, maybe called index, doesn't really matter
-main -up-> App
-Timetable -right-> Prawn
+RequestProcessor --> "1" Formatter : uses >
+RequestProcessor --> "1" ExternalAPI : uses >
+
+ExternalAPI <|-.- HTTParty : includes
+SearchCH --|> ExternalAPI : extends
+
+JSONFormatter ..|> Formatter : implements
+XMLFormatter ..|> Formatter : implements
+PDFFormatter ..|> Formatter : implements
+
+PDFFormatter --> "1" Timetable : creates >
+PDFFormatter --> "1" BucketAdapter : uses >
+
+Timetable <|-.- Prawn::View : includes
+
+BucketAdapter --> BucketSdk : uses >
+
+App --> "1" Config : uses >
+
+' MultiLogger relationships
+App ..> MultiLogger : creates >
+Server --> "1" MultiLogger : uses >
+RequestProcessor --> "1" MultiLogger : uses >
+PDFFormatter --> "1" MultiLogger : uses >
+BucketAdapter --> "1" MultiLogger : uses >
+
+' Dependency injection relationships
+Server <.. Import : injects dependencies
+BucketAdapter <.. Import : injects dependencies
+RequestProcessor <.. Import : injects dependencies
+PDFFormatter <.. Import : injects dependencies
 
 package Prawn <<Frame>> {
 }
 
-package AWS <<Frame>> {
-    package S3 <<Frame>> {
-    }
+package BucketSdk <<Frame>> {
+}
+
+interface Formatter {
+  + format(data : Hash) : String
 }
 
 @enduml
