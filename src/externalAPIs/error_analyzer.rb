@@ -47,7 +47,7 @@ class ErrorAnalyzer
       /#{Regexp.escape(stop_id)}.*not found/i,
       /#{Regexp.escape(stop_id)}.*nicht gefunden/i,
       /#{Regexp.escape(stop_id)}.*introuvable/i,
-      /nicht gefunden/i
+      /haltestelle\s+#{Regexp.escape(stop_id)}\s+nicht\s+gefunden/i
     ]
 
     patterns.any? { |pattern| message.match?(pattern) }
