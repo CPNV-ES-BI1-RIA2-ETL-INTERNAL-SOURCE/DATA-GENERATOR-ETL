@@ -3,6 +3,7 @@
 require 'sinatra/base'
 require 'date'
 require_relative '../controllers/stationboard_controller'
+require_relative '../externalAPIs/api_exceptions'
 
 module Routes
   # API routes for the application
@@ -13,8 +14,9 @@ module Routes
     # Use controllers
     helpers StationboardController
 
-    before do
-      logger.info("#{request.env['REQUEST_METHOD']} #{request.env['REQUEST_URI']}")
+    configure do
+      disable :show_exceptions
+      set :raise_errors, true
     end
 
     # API routes for stationboards

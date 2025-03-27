@@ -2,17 +2,26 @@
 
 require 'date'
 require_relative '../templates/timetable'
+require_relative '../templates/document_adapter'
 
 module PDF
   # Responsible for formatting timetable data
   class TimetableFormatter
-    def create_timetable(data, date)
-      tt = Timetable.new
+    def create_timetable(data, date, config = {})
+      default_config = {
+        document_adapter: DocumentGenerators::PrawnAdapter,
+        column_widths: [110, 50, 150, 2940, 50],
+        headers: ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
+      }
+
+      merged_config = default_config.merge(config)
+
+      tt = Timetable.new(merged_config)
       tt.draw_logo File.expand_path('../../../assets/images/sbb-logo.png', __dir__)
-      tt.headers = ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
+      tt.headers = merged_config[:headers]
       tt.stop = data.stop
       tt.draw_heading(date)
-      tt.draw_table({ column_widths: [110, 50, 150, 2940, 50] }) do
+      tt.draw_table({ column_widths: merged_config[:column_widths] }) do
         format_connections_data(data.connections)
       end
       tt

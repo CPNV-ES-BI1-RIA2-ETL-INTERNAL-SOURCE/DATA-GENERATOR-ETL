@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require_relative '../../src/externalAPIs/api_exceptions'
 
 RSpec.describe StationboardController do
   # Create a test class that includes the controller module
@@ -88,14 +89,14 @@ RSpec.describe StationboardController do
       expect { controller.send(:get_formatter, 'application/json') }.not_to raise_error
     end
 
-    it 'raises an error for unsupported mimetypes' do
+    it 'raises an InvalidRequestError for unsupported mimetypes' do
       # We need to avoid the nil error by returning an empty hash
       allow(formatters).to receive(:[]).with('application/unsupported').and_return({})
       # Ensure the class key is nil
       allow(formatters['application/unsupported']).to receive(:[]).with(:class).and_return(nil)
 
       expect { controller.send(:get_formatter, 'application/unsupported') }
-        .to raise_error('Halted with status 415')
+        .to raise_error(ApiExceptions::InvalidRequestError)
     end
   end
 
@@ -119,7 +120,7 @@ RSpec.describe StationboardController do
       expect(result).to eq('application/json')
     end
 
-    it 'raises an error for unsupported mimetypes' do
+    it 'raises an InvalidRequestError for unsupported mimetypes' do
       # We need to avoid the nil error by returning an empty hash
       allow(formatters).to receive(:[]).with('application/unsupported').and_return({})
       # Ensure the response key exists but type is nil
@@ -127,7 +128,7 @@ RSpec.describe StationboardController do
       allow(formatters['application/unsupported'][:response]).to receive(:[]).with('type').and_return(nil)
 
       expect { controller.send(:get_response_type, 'application/unsupported') }
-        .to raise_error('Halted with status 415')
+        .to raise_error(ApiExceptions::InvalidRequestError)
     end
   end
 
@@ -150,12 +151,14 @@ RSpec.describe StationboardController do
       expect { controller.send(:get_external_api, 'ch', 'get_stationboard') }.not_to raise_error
     end
 
-    it 'raises an error for empty region APIs' do
-      expect { controller.send(:get_external_api, 'de', 'get_stationboard') }.to raise_error(/Halted with status 404/)
+    it 'raises a ResourceNotFoundError for empty region APIs' do
+      expect { controller.send(:get_external_api, 'de', 'get_stationboard') }
+        .to raise_error(ApiExceptions::ResourceNotFoundError)
     end
 
-    it 'raises an error for unsupported regions' do
-      expect { controller.send(:get_external_api, 'fr', 'get_stationboard') }.to raise_error(/Halted with status 404/)
+    it 'raises a ResourceNotFoundError for unsupported regions' do
+      expect { controller.send(:get_external_api, 'fr', 'get_stationboard') }
+        .to raise_error(ApiExceptions::ResourceNotFoundError)
     end
   end
 

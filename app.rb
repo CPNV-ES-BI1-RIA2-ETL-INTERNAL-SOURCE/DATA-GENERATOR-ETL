@@ -24,6 +24,7 @@ class App < Sinatra::Base
     # Configure application
     setup_container
     setup_server_settings
+    Prawn::Fonts::AFM.hide_m17n_warning = true
   end
 
   # Configuration settings

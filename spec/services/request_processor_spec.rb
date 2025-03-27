@@ -2,11 +2,13 @@
 
 require 'spec_helper'
 require_relative '../../src/services/request_processor'
+require_relative '../../src/externalAPIs/api_exceptions'
 
 RSpec.describe RequestProcessor do
   let(:formatter) { double('formatter') }
   let(:external_api) { double('external_api') }
-  let(:processor) { RequestProcessor.new(formatter, external_api) }
+  let(:logger) { double('logger', info: nil, error: nil) }
+  let(:processor) { RequestProcessor.new(formatter, external_api, logger: logger) }
 
   describe '#process' do
     let(:request_data) do
@@ -50,11 +52,28 @@ RSpec.describe RequestProcessor do
       expect(result).to eq(formatted_response)
     end
 
-    it 'raises an error when the API method does not exist' do
-      allow(external_api).to receive(:respond_to?).with('invalid_method').and_return(false)
-      allow(external_api).to receive(:invalid_method).and_raise(NoMethodError)
+    it 'raises an InvalidRequestError when the API method does not exist' do
+      allow(external_api).to receive(:respond_to?).with('invalid_method').and_return(true)
+      allow(external_api).to receive(:invalid_method).and_raise(NoMethodError, "undefined method `invalid_method'")
 
-      expect { processor.process(request_data, 'invalid_method') }.to raise_error(NoMethodError)
+      expect { processor.process(request_data, 'invalid_method') }
+        .to raise_error(ApiExceptions::InvalidRequestError)
+    end
+    
+    it 'propagates specific API exceptions' do
+      allow(external_api).to receive(:get_stationboard)
+        .and_raise(ApiExceptions::StationNotFoundError.new('zurich'))
+        
+      expect { processor.process(request_data, 'get_stationboard') }
+        .to raise_error(ApiExceptions::StationNotFoundError)
+    end
+    
+    it 'wraps generic errors in ApiError' do
+      allow(external_api).to receive(:get_stationboard)
+        .and_raise(StandardError.new('Network error'))
+        
+      expect { processor.process(request_data, 'get_stationboard') }
+        .to raise_error(ApiExceptions::ApiError)
     end
   end
 end

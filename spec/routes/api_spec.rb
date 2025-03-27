@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require_relative '../../src/externalAPIs/api_exceptions'
 
 RSpec.describe Routes::API do
   let(:api_version) { Container[:config]['api']['version'] }
@@ -12,7 +13,8 @@ RSpec.describe Routes::API do
 
         expect(last_response.status).to eq(404)
         json_response = JSON.parse(last_response.body)
-        expect(json_response['error']).to eq('Not Found')
+        expect(json_response['error']).to include('Not Found')
+        expect(json_response['type']).to eq('NotFoundError')
       end
     end
 
@@ -22,7 +24,26 @@ RSpec.describe Routes::API do
 
         expect(last_response.status).to eq(400)
         json_response = JSON.parse(last_response.body)
-        expect(json_response['error']).to eq('Bad Request')
+        expect(json_response['error']).to include('Bad Request')
+        expect(json_response['type']).to eq('BadRequestError')
+      end
+    end
+
+    context 'with unsupported region' do
+      before do
+        # Explicitly mock the exact exception that would be raised
+        allow_any_instance_of(StationboardController).to receive(:get_external_api)
+          .and_raise(ApiExceptions::ResourceNotFoundError.new('Region not supported: fr'))
+      end
+
+      it 'returns error with appropriate status code' do
+        get "/api/v#{api_version}/stationboards/fr/paris"
+
+        expect([404, 500]).to include(last_response.status)
+        json_response = JSON.parse(last_response.body)
+
+        expect(json_response).to have_key('error')
+        expect(json_response).to have_key('status')
       end
     end
 

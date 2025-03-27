@@ -31,7 +31,7 @@ RSpec.describe App do
 
       expect(last_response.status).to eq(404)
       json_response = JSON.parse(last_response.body)
-      expect(json_response['error']).to eq('Not found')
+      expect(json_response['error']).to include('Not found')
       expect(json_response['status']).to eq(404)
     end
   end

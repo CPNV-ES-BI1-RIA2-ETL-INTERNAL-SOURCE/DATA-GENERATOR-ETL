@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../container'
+require_relative '../externalAPIs/api_exceptions'
 
 # Controller for stationboard operations
 module StationboardController
@@ -53,9 +54,20 @@ module StationboardController
   def get_formatter(mimetype)
     config = Container[:config]
     formatter_class = config.formatters[mimetype][:class]
-    halt 415, { error: "Unsupported Media Type: #{mimetype}", status: 415 }.to_json if formatter_class.nil?
+
+    if formatter_class.nil?
+      raise ApiExceptions::InvalidRequestError.new(
+        "Unsupported Media Type: #{mimetype}",
+        { mimetype: mimetype, available_formats: config.formatters.keys }
+      )
+    end
 
     formatter_class.new
+  rescue NameError => e
+    raise ApiExceptions::InvalidResponseError.new(
+      "Error creating formatter for mimetype: #{mimetype}",
+      { original_error: e.message }
+    )
   end
 
   # Get response format for the requested mimetype
@@ -65,7 +77,13 @@ module StationboardController
   def get_response_type(mimetype)
     config = Container[:config]
     format = config.formatters[mimetype][:response]['type']
-    halt 415, { error: "Unsupported Media Type: #{mimetype}", status: 415 }.to_json if format.nil?
+
+    if format.nil?
+      raise ApiExceptions::InvalidRequestError.new(
+        "Unsupported Media Type: #{mimetype}",
+        { mimetype: mimetype, available_formats: config.formatters.keys }
+      )
+    end
 
     format
   end
@@ -78,10 +96,22 @@ module StationboardController
   def get_external_api(region, method)
     config = Container[:config]
     region_apis = config.region_api[region]
-    halt 404, { error: 'No Data Found for this request', status: 404 }.to_json if region_apis.nil? || region_apis.empty?
+
+    if region_apis.nil? || region_apis.empty?
+      raise ApiExceptions::ResourceNotFoundError.new(
+        "Region not supported: #{region}",
+        { region: region, available_regions: config.region_api.keys }
+      )
+    end
 
     accepted_apis = region_apis.select { |api| valid_api?(api: api, method: method) }
-    halt 404, { error: 'No Data Found for this request', status: 404 }.to_json if accepted_apis.empty?
+
+    if accepted_apis.empty?
+      raise ApiExceptions::ResourceNotFoundError.new(
+        "No API found for region #{region} supporting method #{method}",
+        { region: region, method: method, available_apis: region_apis.map(&:name) }
+      )
+    end
 
     accepted_apis.first.new
   end
