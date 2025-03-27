@@ -33,7 +33,7 @@ module DocumentGenerators
     def font(name, options = {}, &block)
       raise NotImplementedError, "#{self.class} must implement font method"
     end
-    
+
     def font_size(size, &block)
       raise NotImplementedError, "#{self.class} must implement font_size method"
     end
@@ -91,4 +91,4 @@ module DocumentGenerators
       @document.render
     end
   end
-end 
+end

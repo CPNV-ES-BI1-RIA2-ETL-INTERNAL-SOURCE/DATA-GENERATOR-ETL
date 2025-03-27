@@ -13,9 +13,9 @@ module PDF
         column_widths: [110, 50, 150, 2940, 50],
         headers: ['<b>Heure de départ</b>', '<b>Ligne</b>', '<b>Destination</b>', '<b>Vias</b>', '<b>Voie</b>']
       }
-      
+
       merged_config = default_config.merge(config)
-      
+
       tt = Timetable.new(merged_config)
       tt.draw_logo File.expand_path('../../../assets/images/sbb-logo.png', __dir__)
       tt.headers = merged_config[:headers]

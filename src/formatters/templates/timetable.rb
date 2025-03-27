@@ -5,17 +5,13 @@ require_relative '../../helpers/date'
 
 # Timetable class for generating timetable templates
 class Timetable
-  attr_reader :table_data
+  attr_reader :table_data, :document
   attr_accessor :stop, :config
 
   def initialize(config = {})
     @table_data = []
     @config = default_config.merge(config)
     setup_document
-  end
-
-  def document
-    @document
   end
 
   def setup_document
