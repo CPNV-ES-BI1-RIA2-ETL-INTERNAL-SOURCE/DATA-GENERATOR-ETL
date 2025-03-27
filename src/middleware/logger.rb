@@ -19,4 +19,4 @@ module Middleware
       logger.info("Response: #{response.status}")
     end
   end
-end 
+end

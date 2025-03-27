@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require_relative '../../src/formatters/pdf/timetable_formatter'
 require 'date'
@@ -20,22 +22,22 @@ RSpec.describe 'Formatters' do
       pdf_content = timetable.render
       pdf = PDF::Inspector::Text.analyze(pdf_content)
       extracted_text = pdf.strings.join(' ')
-      
+
       # Check for expected content in the PDF
       expect(extracted_text).to include('Yverdon-les-Bains')
       expect(extracted_text).to include('01 January 2023') # Assuming DateFormatters would return this
-      
+
       # Check for departure details
       expect(extracted_text).to include('0 04')
       expect(extracted_text).to include('S30')
       expect(extracted_text).to include('Payerne')
       expect(extracted_text).to include('3')
-      
+
       expect(extracted_text).to include('0 15')
       expect(extracted_text).to include('R')
       expect(extracted_text).to include('Grandson')
       expect(extracted_text).to include('1')
-      
+
       # Check for table headers
       expect(extracted_text).to include('Heure de départ')
       expect(extracted_text).to include('Ligne')

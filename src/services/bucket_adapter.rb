@@ -9,7 +9,6 @@ module Services
   # BucketAdapter provides a bridge between our app and the bucket-sdk gem
   # following Ruby conventions and good practices
   class BucketAdapter
-
     include Import[:logger]
 
     # Initializes a new BucketAdapter

@@ -9,4 +9,4 @@ module PDF
       { 'status' => 'created', 'file' => url }.to_json
     end
   end
-end 
+end

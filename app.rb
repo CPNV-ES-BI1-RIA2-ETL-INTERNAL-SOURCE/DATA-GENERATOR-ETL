@@ -36,7 +36,7 @@ class App < Sinatra::Base
   # Register middleware
   use Middleware::Logger
   use Middleware::ErrorHandler
-  
+
   # Register routes
   use Routes::API
 
@@ -71,8 +71,6 @@ class App < Sinatra::Base
     set :bind, '0.0.0.0'
   end
 
-  private
-
   # Register configuration objects
   def self.register_configurations
     Container.register(:config, memoize: true) { Config.new }
@@ -88,31 +86,31 @@ class App < Sinatra::Base
       require_relative 'src/services/bucket_adapter'
       Services::BucketAdapter.new Container[:config]['storage']['url']
     end
-    
+
     Container.register(:request_processor, memoize: false) do |formatter, external_api|
       require_relative 'src/services/request_processor'
       RequestProcessor.new(formatter, external_api)
     end
   end
-  
+
   # Register response formatters
   def self.register_formatters
     Container.register(:json_formatter, memoize: true) do
       require_relative 'src/formatters/json_formatter'
       JsonFormatter.new
     end
-    
+
     Container.register(:xml_formatter, memoize: true) do
       require_relative 'src/formatters/xml_formatter'
       XmlFormatter.new
     end
-    
+
     Container.register(:pdf_formatter, memoize: true) do
       require_relative 'src/formatters/pdf_formatter'
       PdfFormatter.new
     end
   end
-  
+
   # Register external API clients
   def self.register_apis
     Container.register(:search_ch_api, memoize: true) do
@@ -123,4 +121,4 @@ class App < Sinatra::Base
 end
 
 # Setup the application when this file is loaded
-App.setup 
+App.setup

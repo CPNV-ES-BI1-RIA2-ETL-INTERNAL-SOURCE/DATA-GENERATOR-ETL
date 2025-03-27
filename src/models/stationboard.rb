@@ -23,14 +23,14 @@ module Models
     attribute :station, Types::String
     attribute :date, Types::String
     attribute :departures, Types::Array.of(Departure)
-    
+
     # Create a stationboard from raw API data
     # @param data [Hash] The raw API data
     # @return [Stationboard] The stationboard object
     def self.from_api_data(data)
       station = data['station'] || 'Unknown'
       date = data['date'] || Time.now.strftime('%Y-%m-%d')
-      
+
       departures = (data['departures'] || []).map do |departure|
         Departure.new(
           time: departure['time'] || 'Unknown',
@@ -41,7 +41,7 @@ module Models
           operator: departure['operator']
         )
       end
-      
+
       new(
         station: station,
         date: date,
@@ -49,4 +49,4 @@ module Models
       )
     end
   end
-end 
+end

@@ -4,7 +4,6 @@ require_relative '../container'
 
 # Controller for stationboard operations
 module StationboardController
-
   # Get stationboard data
   #
   # @param [Hash] options The options hash
@@ -18,13 +17,13 @@ module StationboardController
   def get_stationboard(options)
     # Get the formatter for the requested mimetype
     formatter = get_formatter(options[:mimetype])
-    
+
     # Get the external API for the requested region
     external_api = get_external_api(options[:region], options[:method])
-    
+
     # Create request processor with the formatter and external API
     request_processor = Container['request_processor'].call(formatter, external_api)
-    
+
     # Process the request
     content = request_processor.process(
       {
@@ -34,17 +33,17 @@ module StationboardController
       },
       options[:method]
     )
-    
+
     # Get the response content type for the mimetype
     response_content_type = get_response_type(options[:mimetype])
-    
+
     # Return both content and content_type
     {
       content: content,
       content_type: response_content_type
     }
   end
-  
+
   private
 
   # Get formatter for the requested mimetype
@@ -70,7 +69,7 @@ module StationboardController
 
     format
   end
-  
+
   # Get external API for the requested region
   #
   # @param [String] region The region code
@@ -80,13 +79,13 @@ module StationboardController
     config = Container[:config]
     region_apis = config.region_api[region]
     halt 404, { error: 'No Data Found for this request', status: 404 }.to_json if region_apis.nil? || region_apis.empty?
-    
+
     accepted_apis = region_apis.select { |api| valid_api?(api: api, method: method) }
     halt 404, { error: 'No Data Found for this request', status: 404 }.to_json if accepted_apis.empty?
-    
+
     accepted_apis.first.new
   end
-  
+
   # Check if the external API has the requested method
   #
   # @param [Class] api The API class
@@ -95,4 +94,4 @@ module StationboardController
   def valid_api?(api:, method:)
     api.method_defined?(method)
   end
-end 
+end

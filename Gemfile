@@ -26,15 +26,15 @@ gem 'prawn-table'
 gem 'puma'
 gem 'rack'
 gem 'rack-contrib'
-gem 'rake'
 gem 'rackup'
+gem 'rake'
 gem 'sinatra'
 
 # Development dependencies
 group :development do
   gem 'rubocop'
-  gem 'yard'
   gem 'solargraph'
+  gem 'yard'
 end
 
 # Testing dependencies

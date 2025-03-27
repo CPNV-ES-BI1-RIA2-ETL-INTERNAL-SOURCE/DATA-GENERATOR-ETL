@@ -7,4 +7,4 @@ module PDF
       "#{date.strftime('%Y-%m-%d')}/#{request[:stop]}.pdf"
     end
   end
-end 
+end

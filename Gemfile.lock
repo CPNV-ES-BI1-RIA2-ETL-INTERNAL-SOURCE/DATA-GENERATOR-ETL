@@ -9,7 +9,7 @@ GEM
     base64 (0.2.0)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
-    bucket_sdk (0.1.0)
+    bucket_sdk (0.1.1)
       faraday (~> 2.7)
       faraday-multipart (~> 1.0)
       zeitwerk (~> 2.6)
@@ -237,7 +237,7 @@ PLATFORMS
 
 DEPENDENCIES
   argv
-  bucket_sdk
+  bucket_sdk (~> 0.1.1)
   dotenv
   dry-auto_inject
   dry-container

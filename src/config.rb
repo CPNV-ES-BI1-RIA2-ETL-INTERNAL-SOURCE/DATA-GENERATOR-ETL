@@ -11,7 +11,7 @@ require_relative './formatters/xml_formatter'
 # Config class that holds the configuration of the server mainly the static data
 class Config
   ConfigError = Class.new(StandardError)
-  
+
   attr_reader :region_api, :accepted_mimetypes, :formatters, :formatter_config, :config_data
 
   # Initialize the config with a specific config file
@@ -36,18 +36,16 @@ class Config
   # @param config_file [String] Path to the config file
   # @raise [ConfigError] If the config file cannot be loaded
   def load_config(config_file)
-    begin
-      cf = File.open(config_file).read
-      ENV.each do |k, v|
-        cf.gsub! "${#{k}}", v
-      end
-
-      @config_data = YAML.load(cf)
-    rescue StandardError => e
-      raise ConfigError, "Failed to load config file: #{e.message}"
+    cf = File.open(config_file).read
+    ENV.each do |k, v|
+      cf.gsub! "${#{k}}", v
     end
+
+    @config_data = YAML.load(cf)
+  rescue StandardError => e
+    raise ConfigError, "Failed to load config file: #{e.message}"
   end
-  
+
   # Validate the config data using Dry::Validation
   # @raise [ConfigError] If the config is invalid
   def validate_config
@@ -55,7 +53,7 @@ class Config
       required(:api).hash do
         required(:version).filled(:string)
       end
-      
+
       required(:formatters).array(:hash) do
         required(:type).filled(:string)
         required(:class).filled(:string)
@@ -64,12 +62,12 @@ class Config
           required(:service).filled(:string)
         end
       end
-      
+
       required(:storage).hash do
         required(:url).filled(:string)
       end
     end
-    
+
     result = schema.call(@config_data)
     raise ConfigError, result.errors.to_h.to_s unless result.success?
   end
@@ -86,11 +84,10 @@ class Config
   def setup_formatters
     @formatters = {}
     @config_data['formatters'].each do |formatter|
-      begin
-        @formatters[formatter['type']] = { class: Object.const_get(formatter['class']), response: formatter['response'] }
-      rescue NameError => e
-        raise ConfigError, "Invalid formatter class: #{formatter['class']}"
-      end
+      @formatters[formatter['type']] =
+        { class: Object.const_get(formatter['class']), response: formatter['response'] }
+    rescue NameError
+      raise ConfigError, "Invalid formatter class: #{formatter['class']}"
     end
   end
 end
