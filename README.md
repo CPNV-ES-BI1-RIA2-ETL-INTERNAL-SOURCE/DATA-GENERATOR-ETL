@@ -37,7 +37,9 @@ More details can be found in the [project wiki](https://github.com/CPNV-ES-BI1-S
 * Ruby 3.0 or later [official doc](https://www.ruby-lang.org/fr/downloads/)
     * or use Rbenv 1.3.2 [official doc](https://github.com/rbenv/rbenv#readme)
 * Git version 2.47.1 or later [official doc](https://git-scm.com/)
-* Bundler 2.5.21 or later (already installed with ruby) [official doc](https://bundler.io/)
+* Bundler 2.5.21 or later [official doc](https://bundler.io/)
+* Docker 27.4.1 or later [official doc](https://docs.docker.com/get-docker/)
+* Bucket Service 1.1.0 [Docker Image](https://hub.docker.com/layers/r0kkxsynetique/ria2-bucket/1.1.0/images/sha256-552bf5f7a9140a3aeeab0bf7f492c28fdf2ea43465c509df3af23057566c5264) [official doc](https://github.com/CPNV-ES-BI1-RIA2-ETL-INTERNAL-SOURCE/BUCKET/blob/1.1.0/README.md)
 
 ## External Dependencies
 
@@ -64,7 +66,7 @@ bundle install
 
 ### Run the server
 
-**index.rb** — Script pour démarrer le serveur Ruby
+**bin/server** — Script pour démarrer le serveur Ruby
 
 #### COMMAND
 
@@ -72,7 +74,7 @@ bundle install
 ruby bin/server [OPTIONS]
 ```
 
-The **index.rb** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
+The **bin/server** script launches a Ruby server with various configuration options (port, development mode, test mode, etc.).
 
 #### OPTIONS
 
@@ -126,10 +128,10 @@ curl -X GET "http://localhost:8080/api/v1.1/stationboards/CH/zurich?date=01/13/2
 
 ```bash
 # Run all tests
-rspec
+bundle exec rspec
 
 # Run a specific test
-rspec spec/services/stationboard_service_spec.rb
+bundle exec rspec spec/formatters/formatters_spec.rb
 ```
 
 ### Run the linter
