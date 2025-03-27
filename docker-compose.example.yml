@@ -1,0 +1,35 @@
+services:
+
+  data-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: "data-generator"
+    environment:
+      - PORT=8000
+    networks:
+      - etl
+    volumes:
+      - ./config.yml:/app/config/config.yml
+      - logs:/app/logs
+    depends_on:
+      - bucket
+
+  bucket:
+    image: r0kkxsynetique/ria2-bucket:1.1.0
+    container_name: "bucket"
+    restart: unless-stopped
+    environment:
+      AWS_ACCESS_KEY:
+      AWS_SECRET_KEY:
+      AWS_REGION:
+      AWS_BUCKET:
+      PROVIDER: s3
+    networks:
+      - etl
+
+networks:
+  etl:
+volumes:
+  logs:
+    driver: local
