@@ -1,0 +1,30 @@
+@startuml
+actor Client
+participant Server
+participant RequestProcessor
+participant ExternalAPI
+participant SearchCH
+participant PDFformatter
+participant Timetable
+
+Client -> Server: Request (station, date, {Accept})
+Server -> RequestProcessor: processRequest(station, date, {Accept})
+RequestProcessor -> ExternalAPI: getStationboard(station, date)
+ExternalAPI -> SearchCH: getStationboard(station, date)
+SearchCH -> ExternalAPI: StationBoardResponse
+ExternalAPI -> RequestProcessor: StationBoardResponse
+
+alt Accept == "application/pdf"
+    RequestProcessor -> PDFformatter: format(StationBoardResponse)
+    PDFformatter -> Timetable: draw_logo(path)
+    PDFformatter -> Timetable: draw_heading(date)
+    PDFformatter -> Timetable: draw_table(data)
+    PDFformatter -> Timetable: render
+    PDFformatter -> RequestProcessor: PDF
+    RequestProcessor -> Server: PDF
+    Server -> Client: Response(Content-Type: application/pdf)
+else Accept == "application/json"
+    RequestProcessor -> Server: StationBoardResponse
+    Server -> Client: Response(Content-Type: application/json)
+end
+@enduml

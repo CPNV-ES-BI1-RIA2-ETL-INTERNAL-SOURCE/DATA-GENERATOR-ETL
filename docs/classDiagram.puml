@@ -1,0 +1,273 @@
+@startuml Data Generator
+skinparam classAttributeIconSize 0
+
+class Server {
+  + startServer!() : void
+  - constructRequestProcessor(country : String, method : String, mimetype : String) : RequestProcessor
+  - getFormatter(mimetype : String) : Formatter
+  - getExternalApi(country : String, method : String) : ExternalAPI
+  - validApi(api : Class, method : String) : boolean
+  - processRequest(requestProcessor : RequestProcessor, options : Hash) : String
+}
+
+Server --|> Sinatra::Base
+
+class App {
+  + {static} run() : void
+  - setupContainer() : void
+  - registerBasicComponents() : void
+  - registerServices() : void
+}
+
+class Container extends Dry {
+  + {static} register(key : Symbol, options : Hash) : void
+}
+
+class RequestProcessor {
+  - formatter : Formatter
+  - externalApi : ExternalAPI
+  - logger : MultiLogger
+  - errorAnalyzer : ErrorAnalyzer
+  + initialize(formatter : Formatter, externalApi : ExternalAPI, **deps) : void
+  + process(options : Hash, method : String) : String
+  - handleErrors(e : Exception) : void
+}
+
+abstract class ExternalAPI {
+  - options : Hash
+  - logger : MultiLogger
+  + initialize() : void
+  + parseResponse(response : Object) : Hash
+  + validateResponse(response : Object) : void
+  # handleApiError(response : Object, message : String) : void
+  # createError(errorType : Class, message : String) : void
+}
+
+class SearchCH {
+  + getStationboard(options : Hash) : Hash
+  + getConnections(options : Hash) : Hash
+  - fetchStationboard(options : Hash) : Object
+  - fetchConnections(options : Hash) : Object
+}
+
+class JSONFormatter {
+  - destinationDataStructure : Hash
+  - originDataStructure : Hash
+  + format(data : Hash) : String
+}
+
+class XMLFormatter {
+  + format(data : Hash) : String
+  - jsonToXml(data : Hash, rootName : String) : String
+  - parseJsonObject(data : Object, xml : Builder) : void
+  - processHash(hash : Hash, xml : Builder) : void
+  - processArray(array : Array, xml : Builder) : void
+}
+
+class PDFFormatter {
+  - logger : MultiLogger
+  - bucketService : Services::BucketAdapter
+  - config : Config
+  - destinationDataStructure : Hash
+  - originDataStructure : Hash
+  + initialize(originDataStructure : Hash = {}, **deps) : void
+  + format(data : Hash) : String
+  - createTimetable(data : StationBoardResponse, date : DateTime) : Timetable
+  - formatConnectionsData(connections : Array) : Array
+  - filenamer(date : DateTime, request : Hash) : String
+  - createResponse(url : String) : String
+}
+
+abstract class DocumentAdapter {
+  # options : Hash
+  + document : Document
+  + initialize(options : Hash = {}) : void
+  + text(content : String, options : Hash = {}) : void
+  + move_down(amount : Integer) : void
+  + image(path : String, options : Hash = {}) : void
+  + table(data : Array, options : Hash = {}) : void
+  + font(name : String, options : Hash = {}) : void
+  + font_size(size : Integer) : void
+  + render_file(filename : String) : void
+  + render() : String
+  # create_document() : void
+}
+
+class PrawnAdapter {
+  + create_document() : void
+  + text(content : String, options : Hash = {}) : void
+  + move_down(amount : Integer) : void
+  + image(path : String, options : Hash = {}) : void
+  + table(data : Array, options : Hash = {}) : void
+  + font(name : String, options : Hash = {}) : void
+  + font_size(size : Integer) : void
+  + render_file(filename : String) : void
+  + render() : String
+}
+
+class TimetableFormatter {
+  + create_timetable(data : Object, date : DateTime, config : Hash = {}) : Timetable
+  + format_connections_data(connections : Array) : Array
+}
+
+class Timetable {
+  - tableData : Array
+  - stop : Object
+  - config : Hash
+  + initialize(config : Hash = {}) : void
+  + setup_document() : void
+  + document : DocumentAdapter
+  + drawLogo(path : String) : void
+  + <set>headers(headers : Array) : void
+  + drawTable(options : Hash) : void
+  + drawHeading(date : DateTime) : void
+  + save(filename : String) : void
+  + <set>stop(stop : Object) : void
+}
+
+class Config {
+  - regionApi : Hash
+  - acceptedMimetypes : Array
+  - formatters : Hash
+  - configData : Hash
+  + initialize(configFile : String = "config.yml") : void
+  + [](key : String) : Object
+  - loadConfig(configFile : String) : void
+  - setupApiMapping() : void
+  - setupFormatters() : void
+}
+
+class BucketAdapter {
+  - client : BucketSdk
+  - logger : MultiLogger
+  + initialize(baseUrl : String, **deps) : void
+  + upload(content : String, filename : String) : Hash
+}
+
+class MultiLogger {
+  + info(message : String) : void
+  + debug(message : String) : void
+  + error(message : String) : void
+  + warn(message : String) : void
+}
+
+class ErrorAnalyzer {
+  - logger : MultiLogger
+  + analyze(error : Exception) : Hash
+  - formatErrorResponse(type : String, message : String, status : Integer) : Hash
+}
+
+abstract class APIException {
+  + message : String
+  + status : Integer
+  + initialize(message : String) : void
+}
+
+class BadRequestError {
+  + status : Integer = 400
+}
+
+package Sinatra {
+  class Base
+}
+
+class NotFoundError {
+  + status : Integer = 404
+}
+
+class ServiceUnavailableError {
+  + status : Integer = 503
+}
+
+class InternalServerError {
+  + status : Integer = 500
+}
+
+class ErrorHandler {
+  + initialize(app) : void
+  + call(env) : Array
+  - handleError(e : Exception) : Array
+}
+
+interface Formatter {
+  + format(data : Hash) : String
+}
+
+package BucketSdk <<Frame>> {
+}
+
+App ..> Server : creates >
+Container <.. App : uses
+
+class Import {
+}
+
+Import --> Container : uses
+
+package Dry {
+  package Container <<frame>> {
+  }
+  package AutoInject <<frame>> {
+  }
+}
+
+Server --> "1" RequestProcessor : creates >
+
+RequestProcessor --> "1" Formatter : uses >
+RequestProcessor --> "1" ExternalAPI : uses >
+RequestProcessor --> "1" ErrorAnalyzer : uses >
+
+ExternalAPI --> APIException : creates >
+SearchCH --|> ExternalAPI : extends
+
+JSONFormatter ..|> Formatter : implements
+XMLFormatter ..|> Formatter : implements
+PDFFormatter ..|> Formatter : implements
+
+PDFFormatter --> "1" TimetableFormatter : uses >
+TimetableFormatter --> "1" Timetable : creates >
+PDFFormatter --> "1" BucketAdapter : uses >
+
+Timetable --> "1" DocumentAdapter : uses >
+PrawnAdapter --|> DocumentAdapter : extends
+
+BucketAdapter --> BucketSdk : uses >
+
+App --> "1" Config : uses >
+
+' MultiLogger relationships
+App ..> MultiLogger : creates >
+Server --> "1" MultiLogger : uses >
+RequestProcessor --> "1" MultiLogger : uses >
+PDFFormatter --> "1" MultiLogger : uses >
+BucketAdapter --> "1" MultiLogger : uses >
+ExternalAPI --> "1" MultiLogger : uses >
+ErrorAnalyzer --> "1" MultiLogger : uses >
+
+' API Exception hierarchy
+APIException <|-- BadRequestError : extends
+APIException <|-- NotFoundError : extends
+APIException <|-- ServiceUnavailableError : extends
+APIException <|-- InternalServerError : extends
+
+' Error handling relationships
+Server --> ErrorHandler : uses >
+ErrorHandler --> ErrorAnalyzer : uses >
+
+' Dependency injection relationships
+Server <.. Import : injects dependencies
+BucketAdapter <.. Import : injects dependencies
+RequestProcessor <.. Import : injects dependencies
+PDFFormatter <.. Import : injects dependencies
+ErrorAnalyzer <.. Import : injects dependencies
+TimetableFormatter <.. Import : injects dependencies
+
+PrawnAdapter <|-.- Prawn::Document : includes
+
+package Prawn <<Frame>> {
+}
+
+package BucketSdk <<Frame>> {
+}
+
+@enduml

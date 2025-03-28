@@ -1,0 +1,39 @@
+﻿name: 'Prevent main from untested code'
+
+on:
+  push:
+    branches: [ "main", "master", "develop", "release/**" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build and test Docker image
+      run: |
+        docker build --target test -f Dockerfile -t data-generator:test . --no-cache
+        docker run --rm data-generator:test
+
+  # Publish artifact for production only on main  
+  publish-artifact:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Build Docker image
+      run: docker build --target runtime -t data-generator:latest .
+
+    - name: Save Docker image to tar file
+      run: docker save -o data-generator.tar data-generator:latest
+
+    - name: Upload Docker image tar file
+      uses: actions/upload-artifact@v4
+      with:
+        name: data-generator-tar
+        path: data-generator.tar

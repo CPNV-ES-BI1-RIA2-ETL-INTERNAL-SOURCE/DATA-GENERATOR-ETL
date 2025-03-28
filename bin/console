@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'irb'
+require 'dotenv/load'
+
+# Set environment to development by default
+ENV['RACK_ENV'] ||= 'development'
+
+# Load the application
+require_relative '../app'
+
+# Start an IRB session
+ARGV.clear
+IRB.start
